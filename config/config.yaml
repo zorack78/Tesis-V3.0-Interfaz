@@ -1,0 +1,115 @@
+# Configuración del Proyecto - Modelo Predictivo Demanda Agua Potable
+
+# Rutas de datos
+data:
+  raw_dir: "data/raw"
+  processed_dir: "data/processed"
+  features_dir: "data/features"
+  volume_file: "BD_VolTotal_X_Hr_m3_UTC.csv"
+  calendar_file: "calendar_social_ES_COMPLETO_20240101_20250930.csv"
+
+# Configuración de modelos
+models:
+  output_dir: "models/trained"
+  
+  # Prophet
+  prophet:
+    seasonality_mode: "multiplicative"
+    yearly_seasonality: true
+    weekly_seasonality: true
+    daily_seasonality: true
+    changepoint_prior_scale: 0.05
+    seasonality_prior_scale: 10.0
+  
+  # XGBoost
+  xgboost:
+    max_depth: 8
+    learning_rate: 0.05
+    n_estimators: 500
+    subsample: 0.8
+    colsample_bytree: 0.8
+    objective: "reg:squarederror"
+    random_state: 42
+  
+  # LightGBM
+  lightgbm:
+    max_depth: 8
+    learning_rate: 0.05
+    n_estimators: 500
+    num_leaves: 64
+    subsample: 0.8
+    colsample_bytree: 0.8
+    objective: "regression"
+    random_state: 42
+  
+  # Random Forest
+  random_forest:
+    n_estimators: 300
+    max_depth: 15
+    min_samples_split: 5
+    min_samples_leaf: 2
+    random_state: 42
+    n_jobs: -1
+
+# Features Engineering
+features:
+  lag_hours: [1, 2, 3, 6, 12, 24, 48, 168]  # 1h, 2h, 3h, 6h, 12h, 1d, 2d, 1w
+  rolling_windows: [6, 12, 24, 168]  # 6h, 12h, 1d, 1w
+  
+  # Features temporales
+  temporal_features:
+    - hour
+    - day_of_week
+    - day_of_month
+    - month
+    - quarter
+    - is_weekend
+    - hour_sin
+    - hour_cos
+    - day_of_week_sin
+    - day_of_week_cos
+  
+  # Features de calendario
+  calendar_features:
+    - feriado
+    - feriado_irrenunciable
+    - anio_nuevo
+    - fiestas_patrias
+    - elecciones
+    - festival_vina
+    - vacaciones_escolares
+    - temporada_turistica_alta
+
+# Validación y evaluación
+validation:
+  test_size: 0.2
+  validation_size: 0.1
+  time_series_split: true
+  n_splits: 5
+  
+  # Métricas
+  metrics:
+    - rmse
+    - mae
+    - mape
+    - r2
+
+# Configuración de timezone
+timezone:
+  utc: "UTC"
+  local: "America/Santiago"  # Chile
+  offset_hours: -3
+
+# Configuración de logging
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "logs/training.log"
+
+# Configuración de visualización
+visualization:
+  style: "seaborn-v0_8-darkgrid"
+  figure_size: [15, 6]
+  dpi: 100
+  save_figures: true
+  output_dir: "outputs/figures"
