@@ -1,4 +1,16 @@
-# Modelo Predictivo de Demanda de Agua Potable - Gran Valparaíso
+# Tesis V3.0 - Interfaz Web Interactiva - Modelo Predictivo de Demanda de Agua Potable
+
+## 🚀 **NUEVA VERSIÓN 3.0 - INTERFAZ GRADIO**
+
+Esta es la versión 3.0 del proyecto que incluye una **interfaz web interactiva** construida con Gradio para el modelo predictivo de demanda de agua potable en Gran Valparaíso, Chile.
+
+## ✨ **Novedades V3.0:**
+- 🌐 **Interfaz web responsiva** optimizada para móviles
+- 📱 **Acceso desde cualquier dispositivo**
+- 🎨 **Visualizaciones interactivas** en tiempo real  
+- 🔄 **Predicciones instantáneas** con intervalos de confianza
+- 📊 **Dashboard completo** con métricas y gráficos
+- 🌍 **Despliegue en la nube** (Hugging Face Spaces)
 
 ## 📋 Descripción del Proyecto
 
