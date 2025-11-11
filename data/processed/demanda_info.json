@@ -1,0 +1,30 @@
+{
+  "variable_objetivo": "Demanda_m3_hr",
+  "formula": "Qin - delta_volumen_m3_hr",
+  "unidad": "m3/hr",
+  "descripcion": "Caudal demandado/consumido por hora",
+  "registros_totales": 15336,
+  "registros_validos": 15222,
+  "estadisticas": {
+    "media": 11752.57297167597,
+    "mediana": 12230.475704083812,
+    "std": 7745.6852407653,
+    "min": -122879.70256866951,
+    "max": 150267.4670953019,
+    "p5": 4810.199818642444,
+    "p95": 19100.849376792838
+  },
+  "hora_pico": {
+    "hora": 12,
+    "demanda_promedio": 17380.987827327586
+  },
+  "hora_valle": {
+    "hora": 4,
+    "demanda_promedio": 5315.222420294353
+  },
+  "comparacion_qin": {
+    "qin_media": 11774.469767441862,
+    "demanda_media": 11752.57297167597,
+    "balance": 21.89679576589151
+  }
+}

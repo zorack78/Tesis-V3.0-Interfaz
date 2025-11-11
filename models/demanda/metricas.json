@@ -1,0 +1,74 @@
+{
+  "modelo": "XGBoost",
+  "variable_objetivo": "Demanda_m3_hr",
+  "n_features": 21,
+  "train": {
+    "n": 10537,
+    "r2": 0.999845239406699,
+    "rmse": 91.22828678525933,
+    "mae": 70.89649500210952,
+    "mape": 1.2124141631920409
+  },
+  "val": {
+    "n": 2258,
+    "r2": 0.962893210725037,
+    "rmse": 1718.866403326875,
+    "mae": 312.0008638710404,
+    "mape": 9.82140405563363
+  },
+  "test": {
+    "n": 2259,
+    "r2": 0.9741965832842923,
+    "rmse": 1302.888748541669,
+    "mae": 285.19452743588,
+    "mape": 3.0215742761879616
+  },
+  "patrones_validados": {
+    "hora_pico_predicha": 12,
+    "hora_valle_predicha": 2,
+    "pico_correcto": true,
+    "valle_correcto": false
+  },
+  "top_features": [
+    {
+      "feature": "Demanda_diff_1h",
+      "importance": 0.21734115481376648
+    },
+    {
+      "feature": "Demanda_diff_24h",
+      "importance": 0.14463281631469727
+    },
+    {
+      "feature": "hour",
+      "importance": 0.14140447974205017
+    },
+    {
+      "feature": "Demanda_ratio_vs_24h",
+      "importance": 0.1204981803894043
+    },
+    {
+      "feature": "Demanda_rolling_mean_6h",
+      "importance": 0.11841632425785065
+    },
+    {
+      "feature": "Demanda_lag_24h",
+      "importance": 0.05096675828099251
+    },
+    {
+      "feature": "hour_cos",
+      "importance": 0.04858563840389252
+    },
+    {
+      "feature": "Demanda_lag_1h",
+      "importance": 0.041582655161619186
+    },
+    {
+      "feature": "Demanda_rolling_std_6h",
+      "importance": 0.0334799624979496
+    },
+    {
+      "feature": "day_of_week_sin",
+      "importance": 0.027582479640841484
+    }
+  ]
+}

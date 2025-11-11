@@ -1,0 +1,84 @@
+#!/usr/bin/env python3
+"""
+Script para corregir timestamps en archivo de volumen por tanque.
+Estandariza timestamps para que coincidan con otros archivos.
+"""
+
+import pandas as pd
+from pathlib import Path
+
+
+def corregir_timestamps_vol_tk():
+    print("=" * 70)
+    print("CORRECCIÓN DE TIMESTAMPS - VOLUMEN POR TANQUE")
+    print("=" * 70)
+    
+    # Cargar datos
+    input_file = Path("data/raw/Vol_X_TK_Hr_m3_UTC.csv")
+    output_file = Path("data/raw/Vol_X_TK_Hr_m3_UTC_CORREGIDO.csv")
+    
+    print(f"\n📁 Cargando: {input_file}")
+    df = pd.read_csv(input_file)
+    
+    print(f"   Total registros: {len(df)}")
+    print(f"   Total columnas: {len(df.columns)}")
+    
+    # Mostrar timestamps originales
+    df['timestamp'] = pd.to_datetime(df['timestamp'])
+    print(f"\n📅 Timestamps originales:")
+    print(f"   Inicio: {df['timestamp'].min()}")
+    print(f"   Fin: {df['timestamp'].max()}")
+    
+    # Reconstruir timestamps con frecuencia horaria desde 2024-01-01 00:00:00
+    print(f"\n🔧 Reconstruyendo timestamps...")
+    print(f"   Nuevo inicio: 2024-01-01 00:00:00 UTC")
+    
+    # Crear timestamps horarios desde 2024-01-01 00:00:00
+    start_date = '2024-01-01 00:00:00'
+    timestamps = pd.date_range(start=start_date, periods=len(df), freq='h', tz='UTC')
+    
+    # Reemplazar timestamps
+    df['timestamp'] = timestamps
+    
+    print(f"   Nuevo fin: {timestamps[-1]}")
+    print(f"   Período: {len(df) / 24:.1f} días (~{len(df) / 24 / 30:.1f} meses)")
+    
+    # Verificar que no hay duplicados
+    n_duplicates = df['timestamp'].duplicated().sum()
+    print(f"\n✅ Verificación:")
+    print(f"   Timestamps únicos: {df['timestamp'].nunique()}")
+    print(f"   Duplicados: {n_duplicates}")
+    
+    # Verificar valores nulos
+    print(f"\n⚠️  Valores nulos:")
+    nulls = df.isnull().sum()
+    total_nulls = nulls.sum()
+    null_cols = nulls[nulls > 0]
+    print(f"   Total valores nulos: {total_nulls}")
+    print(f"   Columnas con nulos: {len(null_cols)} de {len(df.columns)-1} tanques")
+    
+    # Mostrar tanques con 100% nulos (sin datos)
+    full_null_cols = nulls[nulls == len(df)]
+    if len(full_null_cols) > 0:
+        print(f"\n   Tanques sin datos (100% nulos): {len(full_null_cols)}")
+        for col in full_null_cols.index:
+            if col != 'timestamp':
+                print(f"   - {col}")
+    
+    # Guardar archivo corregido
+    print(f"\n💾 Guardando archivo corregido: {output_file}")
+    df.to_csv(output_file, index=False)
+    
+    print(f"\n📊 Primeras 5 filas (primeras 5 columnas):")
+    print(df.iloc[:5, :5])
+    
+    print("\n" + "=" * 70)
+    print("✅ TIMESTAMPS CORREGIDOS EXITOSAMENTE")
+    print("=" * 70)
+    print(f"\nArchivo generado: {output_file}")
+    
+    return df
+
+
+if __name__ == "__main__":
+    corregir_timestamps_vol_tk()
