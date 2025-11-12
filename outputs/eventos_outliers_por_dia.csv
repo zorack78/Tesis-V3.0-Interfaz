@@ -1,0 +1,208 @@
+fecha,n_outliers,horas,horas_consecutivas_max,tipo_evento,tipo_error_principal,tipos_error_dict
+2024-01-01,2,"[np.int32(2), np.int32(5)]",0,Discontinuo,Demanda Negativa,{'Demanda Negativa': 2}
+2024-01-03,3,"[np.int32(4), np.int32(16), np.int32(17)]",2,Mixto (continuo + discontinuo),Demanda Negativa,"{'Demanda Negativa': 2, 'Demanda Extrema Alta (>30k)': 1}"
+2024-01-05,1,[np.int32(4)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-01-06,1,[np.int32(3)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-01-07,2,"[np.int32(2), np.int32(5)]",0,Discontinuo,Demanda Negativa,{'Demanda Negativa': 2}
+2024-01-08,1,[np.int32(10)],0,Aislado,Demanda Extrema Alta (>30k),{'Demanda Extrema Alta (>30k)': 1}
+2024-01-11,1,[np.int32(4)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-01-13,1,[np.int32(4)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-01-14,2,"[np.int32(1), np.int32(3)]",0,Discontinuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2024-01-15,1,[np.int32(3)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-01-16,1,[np.int32(1)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-01-17,4,"[np.int32(2), np.int32(4), np.int32(13), np.int32(14)]",2,Mixto (continuo + discontinuo),Demanda Negativa,"{'Demanda Negativa': 3, 'Demanda Extrema Alta (>30k)': 1}"
+2024-01-18,4,"[np.int32(6), np.int32(13), np.int32(22), np.int32(23)]",2,Mixto (continuo + discontinuo),Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 2, 'Demanda Negativa': 2}"
+2024-01-19,1,[np.int32(4)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-01-20,1,[np.int32(23)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-01-21,2,"[np.int32(5), np.int32(12)]",0,Discontinuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2024-01-23,1,[np.int32(5)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-01-25,2,"[np.int32(2), np.int32(4)]",0,Discontinuo,Demanda Negativa,{'Demanda Negativa': 2}
+2024-01-26,2,"[np.int32(15), np.int32(16)]",2,Continuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2024-01-27,1,[np.int32(4)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-01-28,1,[np.int32(6)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-01-30,2,"[np.int32(9), np.int32(10)]",2,Continuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2024-02-02,5,"[np.int32(15), np.int32(16), np.int32(17), np.int32(21), np.int32(22)]",4,Mixto (continuo + discontinuo),Demanda Negativa,"{'Demanda Negativa': 3, 'Demanda Extrema Alta (>30k)': 2}"
+2024-02-03,3,"[np.int32(0), np.int32(2), np.int32(14)]",0,Discontinuo,Demanda Negativa,"{'Demanda Negativa': 2, 'Demanda Extrema Alta (>30k)': 1}"
+2024-02-04,1,[np.int32(1)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-02-06,1,[np.int32(4)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-02-09,1,[np.int32(2)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-02-14,3,"[np.int32(15), np.int32(21), np.int32(22)]",2,Mixto (continuo + discontinuo),Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 2, 'Demanda Negativa': 1}"
+2024-02-16,1,[np.int32(4)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-02-17,1,[np.int32(4)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-02-23,1,[np.int32(12)],0,Aislado,Demanda Extrema Alta (>30k),{'Demanda Extrema Alta (>30k)': 1}
+2024-02-25,1,[np.int32(12)],0,Aislado,Demanda Extrema Alta (>30k),{'Demanda Extrema Alta (>30k)': 1}
+2024-02-26,1,[np.int32(4)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-03-02,2,"[np.int32(10), np.int32(11)]",2,Continuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2024-03-03,1,[np.int32(9)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-03-10,1,[np.int32(7)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-03-11,1,[np.int32(8)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-03-15,1,[np.int32(2)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-03-20,2,"[np.int32(21), np.int32(22)]",2,Continuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2024-03-24,1,[np.int32(7)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-03-25,1,[np.int32(4)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-03-26,1,[np.int32(3)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-03-27,2,"[np.int32(1), np.int32(6)]",0,Discontinuo,Demanda Negativa,{'Demanda Negativa': 2}
+2024-03-28,1,[np.int32(7)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-03-29,1,[np.int32(4)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-04-04,1,[np.int32(6)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-04-08,3,"[np.int32(7), np.int32(21), np.int32(22)]",2,Mixto (continuo + discontinuo),Demanda Negativa,"{'Demanda Negativa': 2, 'Demanda Extrema Alta (>30k)': 1}"
+2024-04-16,3,"[np.int32(0), np.int32(1), np.int32(11)]",2,Mixto (continuo + discontinuo),Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 2, 'Demanda Negativa': 1}"
+2024-04-17,1,[np.int32(20)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-04-19,2,"[np.int32(13), np.int32(14)]",2,Continuo,Delta Volumen Extremo,"{'Delta Volumen Extremo': 1, 'Demanda Negativa': 1}"
+2024-04-25,1,[np.int32(23)],0,Aislado,Delta Volumen Extremo,{'Delta Volumen Extremo': 1}
+2024-04-26,1,[np.int32(0)],0,Aislado,Delta Volumen Extremo,{'Delta Volumen Extremo': 1}
+2024-04-27,1,[np.int32(10)],0,Aislado,Demanda Extrema Alta (>30k),{'Demanda Extrema Alta (>30k)': 1}
+2024-04-30,2,"[np.int32(12), np.int32(14)]",0,Discontinuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2024-05-01,1,[np.int32(2)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-05-09,2,"[np.int32(9), np.int32(11)]",0,Discontinuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2024-05-10,1,[np.int32(0)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-05-11,1,[np.int32(3)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-05-12,3,"[np.int32(1), np.int32(5), np.int32(22)]",0,Discontinuo,Demanda Negativa,{'Demanda Negativa': 3}
+2024-05-15,1,[np.int32(4)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-05-17,2,"[np.int32(5), np.int32(6)]",2,Continuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2024-05-18,1,[np.int32(6)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-05-23,1,[np.int32(4)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-05-24,2,"[np.int32(3), np.int32(5)]",0,Discontinuo,Demanda Negativa,{'Demanda Negativa': 2}
+2024-05-25,1,[np.int32(7)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-05-29,2,"[np.int32(15), np.int32(16)]",2,Continuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2024-06-05,1,[np.int32(4)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-06-06,1,[np.int32(17)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-06-09,2,"[np.int32(4), np.int32(13)]",0,Discontinuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2024-06-11,1,[np.int32(6)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-06-12,1,[np.int32(14)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-06-13,2,"[np.int32(4), np.int32(6)]",0,Discontinuo,Demanda Negativa,{'Demanda Negativa': 2}
+2024-06-14,1,[np.int32(3)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-06-15,1,[np.int32(1)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-06-16,2,"[np.int32(4), np.int32(6)]",0,Discontinuo,Demanda Negativa,{'Demanda Negativa': 2}
+2024-06-17,2,"[np.int32(7), np.int32(23)]",0,Discontinuo,Demanda Negativa,{'Demanda Negativa': 2}
+2024-06-18,1,[np.int32(9)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-06-20,1,[np.int32(9)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-06-21,1,[np.int32(13)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-06-23,2,"[np.int32(4), np.int32(10)]",0,Discontinuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2024-06-25,3,"[np.int32(7), np.int32(10), np.int32(22)]",0,Discontinuo,Demanda Negativa,{'Demanda Negativa': 3}
+2024-06-26,1,[np.int32(3)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-06-28,1,[np.int32(10)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-06-29,2,"[np.int32(4), np.int32(23)]",0,Discontinuo,Demanda Negativa,{'Demanda Negativa': 2}
+2024-06-30,1,[np.int32(3)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-07-01,2,"[np.int32(5), np.int32(23)]",0,Discontinuo,Demanda Negativa,{'Demanda Negativa': 2}
+2024-07-02,3,"[np.int32(0), np.int32(3), np.int32(8)]",0,Discontinuo,Demanda Negativa,"{'Demanda Negativa': 2, 'Demanda Extrema Alta (>30k)': 1}"
+2024-07-03,2,"[np.int32(3), np.int32(9)]",0,Discontinuo,Demanda Negativa,{'Demanda Negativa': 2}
+2024-07-04,2,"[np.int32(10), np.int32(11)]",2,Continuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2024-07-06,1,[np.int32(6)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-07-12,2,"[np.int32(10), np.int32(11)]",2,Continuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2024-07-13,1,[np.int32(4)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-07-19,1,[np.int32(5)],0,Aislado,Delta Volumen Extremo,{'Delta Volumen Extremo': 1}
+2024-07-22,2,"[np.int32(21), np.int32(22)]",2,Continuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2024-08-02,3,"[np.int32(5), np.int32(7), np.int32(23)]",0,Discontinuo,Demanda Negativa,{'Demanda Negativa': 3}
+2024-08-03,1,[np.int32(0)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-08-07,1,[np.int32(5)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-08-10,2,"[np.int32(8), np.int32(9)]",2,Continuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2024-08-14,1,[np.int32(4)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-08-19,1,[np.int32(11)],0,Aislado,Demanda Extrema Alta (>30k),{'Demanda Extrema Alta (>30k)': 1}
+2024-08-20,2,"[np.int32(11), np.int32(12)]",2,Continuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2024-08-27,1,[np.int32(2)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-08-28,1,[np.int32(23)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-08-30,1,[np.int32(6)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-09-01,1,[np.int32(7)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-09-04,2,"[np.int32(0), np.int32(4)]",0,Discontinuo,Demanda Negativa,{'Demanda Negativa': 2}
+2024-09-05,1,[np.int32(17)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-09-06,1,[np.int32(6)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-09-08,1,[np.int32(1)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-09-11,1,[np.int32(4)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-09-12,1,[np.int32(5)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-09-13,1,[np.int32(5)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-09-14,1,[np.int32(2)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-09-15,1,[np.int32(3)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-09-16,1,[np.int32(2)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-09-19,4,"[np.int32(4), np.int32(5), np.int32(12), np.int32(13)]",3,Mixto (continuo + discontinuo),Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 2, 'Demanda Negativa': 2}"
+2024-09-21,1,[np.int32(8)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-09-25,1,[np.int32(6)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-10-01,1,[np.int32(12)],0,Aislado,Demanda Extrema Alta (>30k),{'Demanda Extrema Alta (>30k)': 1}
+2024-10-07,1,[np.int32(9)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-10-08,2,"[np.int32(3), np.int32(23)]",0,Discontinuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2024-10-09,1,[np.int32(4)],0,Aislado,Delta Volumen Extremo,{'Delta Volumen Extremo': 1}
+2024-10-14,1,[np.int32(1)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-10-16,1,[np.int32(1)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-10-19,2,"[np.int32(7), np.int32(8)]",2,Continuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2024-10-20,1,[np.int32(2)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-10-21,1,[np.int32(12)],0,Aislado,Demanda Extrema Alta (>30k),{'Demanda Extrema Alta (>30k)': 1}
+2024-10-22,1,[np.int32(5)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-10-29,1,[np.int32(6)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-10-30,1,[np.int32(6)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-11-06,1,[np.int32(3)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-11-09,1,[np.int32(13)],0,Aislado,Demanda Extrema Alta (>30k),{'Demanda Extrema Alta (>30k)': 1}
+2024-11-13,1,[np.int32(16)],0,Aislado,Demanda Extrema Alta (>30k),{'Demanda Extrema Alta (>30k)': 1}
+2024-11-24,1,[np.int32(3)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-11-26,1,[np.int32(17)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2024-11-28,2,"[np.int32(10), np.int32(11)]",2,Continuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2024-11-29,2,"[np.int32(12), np.int32(13)]",2,Continuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2024-12-05,3,"[np.int32(6), np.int32(12), np.int32(14)]",0,Discontinuo,Demanda Negativa,"{'Demanda Negativa': 2, 'Demanda Extrema Alta (>30k)': 1}"
+2024-12-09,1,[np.int32(13)],0,Aislado,Demanda Extrema Alta (>30k),{'Demanda Extrema Alta (>30k)': 1}
+2024-12-11,2,"[np.int32(12), np.int32(21)]",0,Discontinuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2024-12-22,1,[np.int32(5)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2025-01-13,1,[np.int32(3)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2025-01-28,1,[np.int32(10)],0,Aislado,Demanda Extrema Alta (>30k),{'Demanda Extrema Alta (>30k)': 1}
+2025-01-29,3,"[np.int32(2), np.int32(4), np.int32(18)]",0,Discontinuo,Demanda Negativa,{'Demanda Negativa': 3}
+2025-01-31,1,[np.int32(5)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2025-02-01,1,[np.int32(7)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2025-02-03,2,"[np.int32(4), np.int32(11)]",0,Discontinuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2025-02-10,2,"[np.int32(22), np.int32(23)]",2,Continuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2025-02-11,4,"[np.int32(1), np.int32(2), np.int32(3), np.int32(4)]",4,Continuo,Delta Volumen Extremo,"{'Delta Volumen Extremo': 3, 'Demanda Extrema Alta (>30k)': 1}"
+2025-02-12,1,[np.int32(1)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2025-02-14,1,[np.int32(7)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2025-02-21,1,[np.int32(13)],0,Aislado,Demanda Extrema Alta (>30k),{'Demanda Extrema Alta (>30k)': 1}
+2025-02-25,1,[np.int32(15)],0,Aislado,Demanda Extrema Alta (>30k),{'Demanda Extrema Alta (>30k)': 1}
+2025-02-26,2,"[np.int32(22), np.int32(23)]",2,Continuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2025-02-27,1,[np.int32(4)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2025-03-03,1,[np.int32(3)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2025-03-04,2,"[np.int32(8), np.int32(9)]",2,Continuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2025-03-12,2,"[np.int32(14), np.int32(19)]",0,Discontinuo,Delta Volumen Extremo,"{'Delta Volumen Extremo': 1, 'Demanda Negativa': 1}"
+2025-03-18,1,[np.int32(1)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2025-03-21,1,[np.int32(7)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2025-03-23,1,[np.int32(7)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2025-04-11,4,"[np.int32(10), np.int32(15), np.int32(21), np.int32(22)]",2,Mixto (continuo + discontinuo),Delta Volumen Extremo,"{'Delta Volumen Extremo': 2, 'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2025-04-14,2,"[np.int32(12), np.int32(13)]",2,Continuo,Delta Volumen Extremo,{'Delta Volumen Extremo': 2}
+2025-04-15,1,[np.int32(5)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2025-04-16,2,"[np.int32(10), np.int32(11)]",2,Continuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2025-04-21,1,[np.int32(5)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2025-04-23,2,"[np.int32(9), np.int32(10)]",2,Continuo,Delta Volumen Extremo,{'Delta Volumen Extremo': 2}
+2025-05-08,1,[np.int32(20)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2025-05-13,3,"[np.int32(19), np.int32(20), np.int32(21)]",3,Continuo,Demanda Negativa,"{'Demanda Negativa': 2, 'Demanda Extrema Alta (>30k)': 1}"
+2025-05-18,4,"[np.int32(5), np.int32(6), np.int32(17), np.int32(23)]",2,Mixto (continuo + discontinuo),Demanda Negativa,{'Demanda Negativa': 4}
+2025-05-19,7,"[np.int32(0), np.int32(1), np.int32(2), np.int32(3), np.int32(4), np.int32(5), np.int32(7)]",6,Mixto (continuo + discontinuo),Demanda Negativa,{'Demanda Negativa': 7}
+2025-05-20,6,"[np.int32(0), np.int32(1), np.int32(2), np.int32(3), np.int32(4), np.int32(5)]",6,Continuo,Demanda Negativa,{'Demanda Negativa': 6}
+2025-06-12,2,"[np.int32(6), np.int32(8)]",0,Discontinuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2025-06-15,1,[np.int32(0)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2025-06-19,1,[np.int32(2)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2025-06-21,1,[np.int32(4)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2025-06-25,4,"[np.int32(15), np.int32(16), np.int32(18), np.int32(19)]",3,Mixto (continuo + discontinuo),Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 2, 'Demanda Negativa': 2}"
+2025-06-26,5,"[np.int32(3), np.int32(7), np.int32(8), np.int32(12), np.int32(13)]",3,Mixto (continuo + discontinuo),Demanda Negativa,"{'Demanda Negativa': 3, 'Demanda Extrema Alta (>30k)': 2}"
+2025-06-27,3,"[np.int32(14), np.int32(15), np.int32(21)]",2,Mixto (continuo + discontinuo),Demanda Negativa,"{'Demanda Negativa': 2, 'Demanda Extrema Alta (>30k)': 1}"
+2025-07-03,2,"[np.int32(8), np.int32(18)]",0,Discontinuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2025-07-04,1,[np.int32(13)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2025-07-05,2,"[np.int32(5), np.int32(7)]",0,Discontinuo,Demanda Negativa,{'Demanda Negativa': 2}
+2025-07-20,1,[np.int32(18)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2025-07-22,2,"[np.int32(14), np.int32(15)]",2,Continuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2025-07-25,2,"[np.int32(9), np.int32(10)]",2,Continuo,Delta Volumen Extremo,{'Delta Volumen Extremo': 2}
+2025-07-30,2,"[np.int32(19), np.int32(20)]",2,Continuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2025-08-06,1,[np.int32(7)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2025-08-08,2,"[np.int32(5), np.int32(11)]",0,Discontinuo,Demanda Negativa,{'Demanda Negativa': 2}
+2025-08-10,2,"[np.int32(3), np.int32(7)]",0,Discontinuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2025-08-12,4,"[np.int32(11), np.int32(12), np.int32(21), np.int32(22)]",3,Mixto (continuo + discontinuo),Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 2, 'Demanda Negativa': 2}"
+2025-08-13,1,[np.int32(2)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2025-08-14,1,[np.int32(2)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2025-08-19,2,"[np.int32(9), np.int32(10)]",2,Continuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2025-08-21,2,"[np.int32(7), np.int32(8)]",2,Continuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2025-08-22,2,"[np.int32(6), np.int32(13)]",0,Discontinuo,Demanda Negativa,{'Demanda Negativa': 2}
+2025-08-25,2,"[np.int32(10), np.int32(11)]",2,Continuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2025-08-28,1,[np.int32(6)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2025-08-29,3,"[np.int32(4), np.int32(7), np.int32(22)]",0,Discontinuo,Demanda Negativa,{'Demanda Negativa': 3}
+2025-09-02,1,[np.int32(3)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2025-09-03,2,"[np.int32(8), np.int32(9)]",2,Continuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2025-09-06,2,"[np.int32(11), np.int32(12)]",2,Continuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2025-09-07,1,[np.int32(1)],0,Aislado,Delta Volumen Extremo,{'Delta Volumen Extremo': 1}
+2025-09-13,2,"[np.int32(9), np.int32(10)]",2,Continuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"
+2025-09-16,3,"[np.int32(1), np.int32(2), np.int32(4)]",2,Mixto (continuo + discontinuo),Demanda Negativa,{'Demanda Negativa': 3}
+2025-09-19,1,[np.int32(3)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2025-09-25,1,[np.int32(9)],0,Aislado,Demanda Negativa,{'Demanda Negativa': 1}
+2025-09-29,2,"[np.int32(21), np.int32(22)]",2,Continuo,Demanda Extrema Alta (>30k),"{'Demanda Extrema Alta (>30k)': 1, 'Demanda Negativa': 1}"

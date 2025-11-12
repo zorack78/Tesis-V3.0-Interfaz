@@ -14,10 +14,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 import gradio as gr
 import json
 import xgboost as xgb
 from sklearn.metrics import mean_absolute_error, r2_score
+import requests
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -389,6 +391,132 @@ class InterfazGradioV3:
         
         plt.tight_layout()
         return fig
+    
+    def capturar_pronostico_clima(self):
+        """Captura pronóstico climático desde Open-Meteo"""
+        try:
+            from zoneinfo import ZoneInfo
+            TZ = ZoneInfo('America/Santiago')
+            
+            # Coordenadas Estación Rodelillo
+            LAT, LON = -33.06528, -71.55639
+            
+            # Determinar fechas (si >=17:00, empezar mañana)
+            now = datetime.now(TZ)
+            if now.hour >= 17:
+                start_date = (now + timedelta(days=1)).date()
+            else:
+                start_date = now.date()
+            
+            target_dates = [start_date + timedelta(days=i) for i in range(3)]
+            start_iso = target_dates[0].isoformat()
+            end_iso = target_dates[-1].isoformat()
+            
+            # Consultar Open-Meteo
+            url = 'https://api.open-meteo.com/v1/forecast'
+            params = {
+                'latitude': LAT,
+                'longitude': LON,
+                'daily': 'temperature_2m_max,temperature_2m_min,precipitation_sum',
+                'hourly': 'relative_humidity_2m',
+                'timezone': 'America/Santiago',
+                'start_date': start_iso,
+                'end_date': end_iso,
+            }
+            
+            response = requests.get(url, params=params, timeout=15)
+            
+            if response.status_code != 200:
+                return pd.DataFrame(), f"❌ Error API: {response.status_code}"
+            
+            data = response.json()
+            daily = data.get('daily', {})
+            hourly = data.get('hourly', {})
+            
+            # Procesar datos diarios
+            df_daily = pd.DataFrame({
+                'Fecha': pd.to_datetime(daily.get('time', [])),
+                'Temp_Max_°C': daily.get('temperature_2m_max', []),
+                'Temp_Min_°C': daily.get('temperature_2m_min', []),
+                'Precipitacion_mm': daily.get('precipitation_sum', []),
+            })
+            
+            # Calcular humedad promedio
+            if hourly and 'time' in hourly:
+                df_hourly = pd.DataFrame({
+                    'timestamp': pd.to_datetime(hourly['time']),
+                    'humidity': hourly['relative_humidity_2m']
+                })
+                df_hourly['date'] = df_hourly['timestamp'].dt.date
+                humidity_daily = df_hourly.groupby('date')['humidity'].mean().reset_index()
+                humidity_daily.columns = ['date', 'Humedad_%']
+                
+                df_daily['date'] = df_daily['Fecha'].dt.date
+                df_daily = df_daily.merge(humidity_daily, on='date', how='left')
+                df_daily = df_daily.drop('date', axis=1)
+            else:
+                df_daily['Humedad_%'] = None
+            
+            # Formatear
+            df_daily['Fecha'] = df_daily['Fecha'].dt.strftime('%Y-%m-%d')
+            df_daily['Temp_Max_°C'] = df_daily['Temp_Max_°C'].round(1)
+            df_daily['Temp_Min_°C'] = df_daily['Temp_Min_°C'].round(1)
+            df_daily['Precipitacion_mm'] = df_daily['Precipitacion_mm'].round(1)
+            df_daily['Humedad_%'] = df_daily['Humedad_%'].round(0)
+            
+            # Mensaje éxito
+            mensaje = f"✅ Pronóstico capturado: {now.strftime('%Y-%m-%d %H:%M')}"
+            mensaje += f"\n📍 Estación: Rodelillo, Ad."
+            mensaje += f"\n📅 Fechas: {df_daily['Fecha'].iloc[0]} a {df_daily['Fecha'].iloc[-1]}"
+            
+            return df_daily, mensaje
+            
+        except Exception as e:
+            return pd.DataFrame(), f"❌ Error: {str(e)}"
+    
+    def analizar_alertas_clima(self, df):
+        """Detecta condiciones climáticas extremas"""
+        if df is None or df.empty:
+            return "⚠️ No hay datos para analizar"
+        
+        alertas = []
+        
+        for _, row in df.iterrows():
+            fecha = row['Fecha']
+            temp_min = row['Temp_Min_°C']
+            temp_max = row['Temp_Max_°C']
+            precip = row['Precipitacion_mm']
+            humedad = row['Humedad_%']
+            
+            # Alertas según importancia de features
+            if precip > 5.0:
+                alertas.append(f"🔴 {fecha}: Precipitación alta ({precip:.1f} mm) - Reducción demanda esperada")
+            
+            if temp_min < 12.0:
+                alertas.append(f"🔵 {fecha}: Temperatura baja ({temp_min:.1f}°C) - Mayor recuperación nocturna")
+            
+            if humedad > 85:
+                alertas.append(f"💧 {fecha}: Humedad muy alta ({humedad:.0f}%) - Afecta sensación térmica")
+            
+            variacion = temp_max - temp_min
+            if variacion > 12:
+                alertas.append(f"🟠 {fecha}: Alta variación térmica ({variacion:.1f}°C) - Demanda variable")
+        
+        if not alertas:
+            return "✅ Sin alertas climáticas (condiciones normales)"
+        
+        return "\n".join(alertas)
+    
+    def guardar_pronostico(self, df):
+        """Guarda pronóstico en CSV"""
+        if df is None or df.empty:
+            return "⚠️ No hay datos para guardar"
+        
+        try:
+            df.to_csv('outputs/pronostico_manual_3dias.csv', index=False)
+            return f"✅ Guardado: outputs/pronostico_manual_3dias.csv ({len(df)} días)"
+        except Exception as e:
+            return f"❌ Error al guardar: {str(e)}"
         
     def crear_interfaz(self):
         """Crea la interfaz web Gradio"""
@@ -448,6 +576,7 @@ class InterfazGradioV3:
                                                 label="Temperatura Promedio (°C)")
                         hr_promedio = gr.Slider(0, 100, value=65, step=1, 
                                               label="Humedad Relativa (%)")
+                        use_forecast = gr.Checkbox(label="Usar pronóstico climático (día 1)", value=False)
                         
                     with gr.Row():
                         precipitacion = gr.Slider(0, 50, value=0, step=0.1, 
@@ -483,7 +612,58 @@ class InterfazGradioV3:
                             gr.Markdown("#### ⚠️ Alertas Activas")
                             alertas_sistema_output = gr.HTML()
                 
-                # TAB 3: Análisis Histórico
+                # TAB 3: Pronóstico Climático
+                with gr.Tab("🌤️ Pronóstico Climático"):
+                    gr.Markdown("### Pronóstico 3 Días - Estación Rodelillo")
+                    gr.Markdown("**Coordenadas:** -33.06528, -71.55639 | **Altura:** 335 msnm")
+                    
+                    with gr.Row():
+                        with gr.Column(scale=2):
+                            with gr.Row():
+                                btn_capturar_clima = gr.Button(
+                                    "📥 Capturar Pronóstico (Open-Meteo)", 
+                                    variant="primary", size="lg")
+                                btn_guardar_clima = gr.Button(
+                                    "💾 Guardar Pronóstico", 
+                                    variant="secondary")
+                            
+                            tabla_clima = gr.Dataframe(
+                                headers=["Fecha", "Temp_Max_°C", "Temp_Min_°C", 
+                                        "Precipitacion_mm", "Humedad_%"],
+                                datatype=["str", "number", "number", "number", "number"],
+                                row_count=3,
+                                col_count=(5, "fixed"),
+                                interactive=True,
+                                label="Pronóstico 3 Días (editable)"
+                            )
+                            
+                        with gr.Column(scale=1):
+                            gr.Markdown("### 📊 Estado")
+                            txt_mensaje_clima = gr.Textbox(
+                                label="Mensajes", lines=4, interactive=False)
+                            
+                            gr.Markdown("### ⚠️ Alertas Climáticas")
+                            txt_alertas_clima = gr.Textbox(
+                                label="Análisis", lines=6, interactive=False)
+                            
+                            btn_analizar_clima = gr.Button(
+                                "🔍 Analizar Alertas", variant="secondary")
+                    
+                    gr.Markdown("""
+                    **Instrucciones:**
+                    1. **Capturar Pronóstico**: Obtiene datos automáticamente de Open-Meteo
+                    2. **Editar Tabla**: Puedes modificar los valores directamente
+                    3. **Guardar**: Guarda en `outputs/pronostico_manual_3dias.csv`
+                    4. **Analizar Alertas**: Detecta condiciones extremas
+                    
+                    **Umbrales de Alerta:**
+                    - 🔴 Precipitación > 5 mm/día (reducción demanda esperada)
+                    - 🔵 Temperatura < 12°C (mayor recuperación nocturna)
+                    - 💧 Humedad > 85% (afecta sensación térmica)
+                    - 🟠 Variación térmica > 12°C/día (demanda variable)
+                    """)
+                
+                # TAB 4: Análisis Histórico
                 with gr.Tab("📅 Análisis Histórico"):
                     gr.Markdown("### Análisis de Datos Históricos V3.0")
                     
@@ -503,7 +683,36 @@ class InterfazGradioV3:
                     sistema_info_html = gr.HTML()
                     
             # Función para predicción en tiempo real
-            def realizar_prediccion(dia_sem, temp, hr, precip, evento, cambios):
+            def realizar_prediccion(dia_sem, temp, hr, precip, evento, cambios, use_forecast_flag):
+                # Si el usuario solicita usar el pronóstico climático y existe el CSV
+                try:
+                    if use_forecast_flag:
+                        import os
+                        csv_path = Path('outputs') / 'pronostico_3dias_open_meteo.csv'
+                        if csv_path.exists():
+                            dff = pd.read_csv(csv_path)
+                            if not dff.empty:
+                                # Usar la primera fila (día 1) como valores para la predicción
+                                row = dff.iloc[0]
+                                # Temperatura promedio = (max+min)/2
+                                try:
+                                    temp = float((row.get('Temp_Max_°C', np.nan) + row.get('Temp_Min_°C', np.nan)) / 2)
+                                except Exception:
+                                    temp = temp
+                                # Humedad
+                                try:
+                                    hr = float(row.get('Humedad_%', hr))
+                                except Exception:
+                                    hr = hr
+                                # Precipitación
+                                try:
+                                    precip = float(row.get('Precipitacion_mm', precip))
+                                except Exception:
+                                    precip = precip
+                except Exception:
+                    # Si falla la lectura, seguimos con los valores manuales
+                    pass
+
                 pred, porc, tipo, just, alerts = self.predecir_demanda(
                     dia_sem, temp, hr, precip, evento, cambios
                 )
@@ -609,9 +818,9 @@ class InterfazGradioV3:
             # Función para información del sistema
             def mostrar_info_sistema():
                 info_html = f"""
-                <div style="background: #f5f5f5; padding: 20px; border-radius: 10px;">
+                <div style="background: #000000; color: #ffffff; padding: 20px; border-radius: 10px;">
                     <h3>🚰 Sistema Predictivo ESVAL V3.0</h3>
-                    
+
                     <h4>📊 Características del Sistema:</h4>
                     <ul>
                         <li><strong>Capacidad Total:</strong> {self.sistema_info['capacidad_total_m3']:,.0f} m³</li>
@@ -620,7 +829,7 @@ class InterfazGradioV3:
                         <li><strong>Límite Mínimo:</strong> 60% ({self.sistema_info['limite_minimo_60pct']:,.0f} m³)</li>
                         <li><strong>Límite Máximo:</strong> 90% ({self.sistema_info['limite_maximo_90pct']:,.0f} m³)</li>
                     </ul>
-                    
+
                     <h4>🎯 Nuevas Capacidades V3.0:</h4>
                     <ul>
                         <li>✅ Análisis climático integrado (temperatura, humedad, precipitación)</li>
@@ -632,17 +841,36 @@ class InterfazGradioV3:
                         <li>✅ Conversión automática UTC → hora Chile</li>
                         <li>✅ Dashboard operativo interactivo</li>
                     </ul>
-                    
-                    <h4>🤖 Modelo Predictivo:</h4>
-                    <ul>
-                        <li><strong>Algoritmo:</strong> Random Forest con 100 estimadores</li>
-                        <li><strong>Features:</strong> 9 variables (clima, operación, sociales)</li>
-                        <li><strong>Justificación:</strong> Explicación automática de predicciones</li>
-                        <li><strong>Actualización:</strong> Tiempo real con nuevos datos</li>
-                    </ul>
-                    
-                    <h4>🏢 ESVAL - Empresa de Obras Sanitarias del Gran Valparaíso</h4>
-                    <p>Sistema desarrollado para optimizar la gestión del agua potable en la región de Valparaíso, Chile.</p>
+
+                    <h4>🤖 Modelos ML y Conexiones a BD</h4>
+                    <div style="background:#111; padding:12px; border-radius:6px; margin-top:8px;">
+                        <h5 style="margin:6px 0; color:#fff;">Resumen de Modelos</h5>
+                        <ul>
+                            <li><strong>Modelo de Producción:</strong> XGBoost / XGBRegressor (modelo entrenado en `models/gradio/water_demand_model.pkl`).</li>
+                            <li><strong>Features:</strong> Archivo `models/gradio/features.txt` describe las variables usadas (lags de volumen, rolling, clima, eventos, calendario).</li>
+                            <li><strong>Entrenamiento:</strong> Scripts en `src/models.py` y `modelo_avanzado.py` generan y validan los modelos; guardan artefactos en `models/`.</li>
+                            <li><strong>Fallback:</strong> Si no existe modelo pre-entrenado, la interfaz entrena un modelo básico rápido (XGBoost) con datos en `data/processed/`.</li>
+                        </ul>
+
+                        <h5 style="margin:6px 0; color:#fff;">Conexión a Bases de Datos / Datos</h5>
+                        <ul>
+                            <li><strong>Datos procesados:</strong> Carpeta `data/processed/` contiene `data_processed_complete.csv`, `clima_chile_v3.csv`, `volumen_total_chile_v3.csv` y métricas.</li>
+                            <li><strong>Origen histórico:</strong> Estación Rodelillo (coordenadas -33.06528, -71.55639) — archivos climáticos en `data/processed/clima_chile_v3.csv`.</li>
+                            <li><strong>Pronóstico:</strong> Se captura diariamente desde Open-Meteo y se guarda en `outputs/pronostico_3dias_open_meteo.csv` para uso en simulaciones.</li>
+                            <li><strong>Model artifacts:</strong> `models/` contiene modelos serializados (.pkl) y archivos auxiliares.</li>
+                        </ul>
+                    </div>
+
+                    <h4 style="margin-top:12px;">📌 Cómo se integran en la interfaz</h4>
+                    <ol>
+                        <li>La interfaz carga los datos procesados desde `data/processed/` al iniciar.</li>
+                        <li>Al capturar el pronóstico (Open-Meteo), el CSV en `outputs/` se utiliza automáticamente si el usuario selecciona "Usar pronóstico" en la pestaña de predicción.</li>
+                        <li>Las simulaciones y predicciones toman las features climáticas proyectadas (temp, HR, precip) y las inyectan al modelo XGBoost para producir la demanda prevista.</li>
+                        <li>Los modelos y resultados se almacenan en `models/` y `outputs/` respectivamente para auditoría y reproducibilidad.</li>
+                    </ol>
+
+                    <h4 style="margin-top:12px;">🏁 Nota</h4>
+                    <p style="color:#ddd;">Si deseas, puedo añadir enlaces directos para descargar los artefactos (modelos y CSVs) y una sección de "cómo regenerar el modelo" con los comandos exactos para reproducir el entrenamiento.</p>
                 </div>
                 """
                 return info_html
@@ -651,7 +879,7 @@ class InterfazGradioV3:
             predecir_btn.click(
                 realizar_prediccion,
                 inputs=[dia_semana, temp_promedio, hr_promedio, precipitacion, 
-                       tiene_evento, cambios_bruscos],
+                       tiene_evento, cambios_bruscos, use_forecast],
                 outputs=[justificacion_output, alertas_output, prediccion_plot]
             )
             
@@ -664,6 +892,25 @@ class InterfazGradioV3:
                 generar_analisis_historico,
                 inputs=[fecha_inicio, fecha_fin],
                 outputs=[historico_plot, resumen_historico]
+            )
+            
+            # Eventos pronóstico climático
+            btn_capturar_clima.click(
+                self.capturar_pronostico_clima,
+                inputs=[],
+                outputs=[tabla_clima, txt_mensaje_clima]
+            )
+            
+            btn_guardar_clima.click(
+                self.guardar_pronostico,
+                inputs=[tabla_clima],
+                outputs=[txt_mensaje_clima]
+            )
+            
+            btn_analizar_clima.click(
+                self.analizar_alertas_clima,
+                inputs=[tabla_clima],
+                outputs=[txt_alertas_clima]
             )
             
             # Cargar información inicial

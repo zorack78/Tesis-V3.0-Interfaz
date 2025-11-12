@@ -1,0 +1,9 @@
+{
+    "importancia_temporal": 0.38914093375205994,
+    "importancia_demanda": 0.5943568348884583,
+    "importancia_clima": 0.016502201557159424,
+    "n_features_temporal": 10,
+    "n_features_demanda": 11,
+    "n_features_clima": 37,
+    "n_features_total": 58
+}
