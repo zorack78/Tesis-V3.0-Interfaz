@@ -37,6 +37,7 @@ class InterfazGradioV3:
         self.sistema_info = None
         self.modelo_prediccion = None
         self.features_modelo = None
+        self.umbrales = None
         
     def cargar_datos(self):
         """Carga todos los datos procesados V3.0"""
@@ -62,12 +63,47 @@ class InterfazGradioV3:
             return False
             
     def cargar_modelo_entrenado(self):
-        """Carga el modelo pre-entrenado de alta calidad"""
-        print("🤖 Cargando modelo predictivo avanzado...")
+        """Carga el modelo pre-entrenado de alta calidad (Forecasting V3.0)"""
+        print("🤖 Cargando modelo predictivo avanzado V3.0...")
         
         import joblib
         from pathlib import Path
         
+        # Intentar cargar modelo nuevo (Forecasting V3.0)
+        model_path_v3 = Path("models/forecasting")
+        model_file_v3 = model_path_v3 / "modelo_forecasting_xgboost.pkl"
+        features_file_v3 = model_path_v3 / "features.txt"
+        metricas_file_v3 = model_path_v3 / "metricas.json"
+        umbrales_file_v3 = model_path_v3 / "umbrales.pkl"
+        
+        if model_file_v3.exists():
+            try:
+                # Cargar modelo V3.0 (Forecasting)
+                self.modelo_prediccion = joblib.load(model_file_v3)
+                
+                # Cargar features
+                with open(features_file_v3, 'r') as f:
+                    self.features_modelo = [line.strip() for line in f]
+                
+                # Cargar métricas
+                with open(metricas_file_v3, 'r') as f:
+                    metricas = json.load(f)
+                
+                # Cargar umbrales
+                self.umbrales = joblib.load(umbrales_file_v3)
+                
+                print(f"✅ Modelo Forecasting V3.0 cargado exitosamente")
+                print(f"   📋 Features: {len(self.features_modelo)}")
+                print(f"   🎯 RMSE: {metricas['rmse']:.2f} m³/hr")
+                print(f"   🎯 R²: {metricas['r2']:.4f}")
+                print(f"   🌡️ Incorpora temperatura y clima")
+                
+                return metricas['mae'], metricas['r2']
+                
+            except Exception as e:
+                print(f"⚠️ Error cargando modelo V3.0: {e}")
+        
+        # Fallback: modelo gradio antiguo
         model_path = Path("models/gradio")
         model_file = model_path / "water_demand_model.pkl"
         features_file = model_path / "features.txt"
@@ -84,9 +120,9 @@ class InterfazGradioV3:
             with open(features_file, 'r') as f:
                 self.features_modelo = [line.strip() for line in f]
             
-            print(f"✅ Modelo cargado exitosamente")
+            print(f"✅ Modelo baseline cargado exitosamente")
             print(f"   📋 Features: {len(self.features_modelo)}")
-            print(f"   🎯 Modelo entrenado con datos horarios avanzados")
+            print(f"   🎯 Modelo entrenado con datos horarios")
             
             return 0, 0.95  # Retornar métricas aproximadas
             

@@ -1,0 +1,7 @@
+tipo,variable,valor,descripcion
+Umbral Temperatura,clima_temp_c,10.5°C (Q25),Umbral frío - Demanda típica en temperaturas bajas
+Umbral Temperatura,clima_temp_c,16.3°C (Q75),Umbral calor - Demanda típica en temperaturas altas
+Hora Crítica,hora,12h,Hora de máxima demanda: -5222 m3/hr
+Hora Crítica,hora,4h,Hora de máxima recuperación: 5149 m3/hr
+Umbral Qin,sist_Qin_m3h,10998 m3/hr (Q25),Qin bajo - Producción reducida
+Umbral Qin,sist_Qin_m3h,12614 m3/hr (Q75),Qin alto - Producción elevada
