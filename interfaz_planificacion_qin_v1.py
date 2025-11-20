@@ -857,6 +857,17 @@ class InterfazPlanificacionQin:
             es_correcto = balance_calor < balance_frio
             cambio_esperado = diferencia_pct > 10
             
+            # Interpretación del balance
+            def interpretar_balance(balance):
+                if balance < -1000:
+                    return "🔴 Alta descarga de almacenamiento"
+                elif balance < 0:
+                    return "🟡 Descarga de almacenamiento"
+                elif balance < 1000:
+                    return "🟢 Ligera recarga"
+                else:
+                    return "🟢 Recarga de almacenamiento"
+            
             return {
                 'nombre': 'Sensibilidad a Temperatura',
                 'icono': '🌡️',
@@ -864,11 +875,16 @@ class InterfazPlanificacionQin:
                 'detalles': f"""
 **Test:** Predicción 24h con 3°C vs 30°C
 
-- **Balance con 3°C:** {balance_frio:,.0f} m³
-- **Balance con 30°C:** {balance_calor:,.0f} m³
+- **Balance Q_net con 3°C:** {balance_frio:,.0f} m³ {interpretar_balance(balance_frio)}
+- **Balance Q_net con 30°C:** {balance_calor:,.0f} m³ {interpretar_balance(balance_calor)}
 - **Diferencia:** {diferencia_pct:.1f}%
 - **Comportamiento:** {'✅ Correcto' if es_correcto else '❌ Invertido'}
 - **Sensibilidad:** {'✅ Adecuada' if cambio_esperado else '⚠️ Baja'}
+
+💡 **Interpretación:**
+- Balance **negativo** = Sistema usa almacenamiento (Demanda > Producción) → Correcto con calor
+- Balance **positivo** = Sistema recarga almacenamiento (Producción > Demanda) → Correcto con frío
+- Mayor temperatura → Mayor consumo → Balance más negativo ✅
                 """,
                 'ok': es_correcto and cambio_esperado
             }
