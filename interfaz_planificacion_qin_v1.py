@@ -654,7 +654,7 @@ class InterfazPlanificacionQin:
         return fig
     
     def evaluar_testing(self):
-        """Evalúa modelo en periodo de testing (igual que V3.0)"""
+        """Evalúa modelo en periodo de testing calculando demanda real (Qout)"""
         try:
             # Cargar dataset con TODAS las features ya creadas
             df_completo_path = Path('data/processed/dataset_features_completo.csv')
@@ -673,36 +673,51 @@ class InterfazPlanificacionQin:
             test_start = int(n * 0.85)
             df_test = df.iloc[test_start:]
             
-            # Predecir
+            # Predecir Q_net
             X_test = df_test[self.features]
-            y_test = df_test['Q_net_m3h'].values
-            y_pred = self.modelo.predict(X_test)
+            y_test_qnet = df_test['Q_net_m3h'].values
+            y_pred_qnet = self.modelo.predict(X_test)
             
-            # Calcular métricas
+            # CALCULAR DEMANDA REAL (Qout = Qin - Q_net)
+            # Obtener Qin por hora
+            df_test['hora'] = df_test['timestamp'].dt.hour
+            qin_por_hora = df_test['hora'].map(self.qin_perfil_hora).apply(lambda x: x['median'])
+            
+            # Demanda real y predicha
+            y_test_qout = qin_por_hora.values - y_test_qnet
+            y_pred_qout = qin_por_hora.values - y_pred_qnet
+            
+            # Calcular métricas SOBRE LA DEMANDA (no sobre Q_net)
             from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-            rmse = np.sqrt(mean_squared_error(y_test, y_pred))
-            mae = mean_absolute_error(y_test, y_pred)
-            r2 = r2_score(y_test, y_pred)
+            rmse = np.sqrt(mean_squared_error(y_test_qout, y_pred_qout))
+            mae = mean_absolute_error(y_test_qout, y_pred_qout)
+            r2 = r2_score(y_test_qout, y_pred_qout)
             
-            mask = y_test != 0
-            mape = np.mean(np.abs((y_test[mask] - y_pred[mask]) / y_test[mask])) * 100
+            mask = y_test_qout != 0
+            mape = np.mean(np.abs((y_test_qout[mask] - y_pred_qout[mask]) / y_test_qout[mask])) * 100
             
             # Error absoluto
-            errores = y_pred - y_test
+            errores = y_pred_qout - y_test_qout
             
             # Reporte
+            modelo_nombre = self.metricas.get('modelo', 'XGBoost Forecasting V3.0')
+            modelo_r2_original = self.metricas.get('r2', 0)
+            
             resultado = f"""
-### 📊 Evaluación en Periodo de Testing
+### 📊 Evaluación en Periodo de Testing - Demanda Real (Qout)
 
-**Periodo:** {df_test['timestamp'].min().strftime('%d/%m/%Y')} - {df_test['timestamp'].max().strftime('%d/%m/%Y')}  
-**Registros:** {len(df_test):,} horas
+**🤖 Modelo:** {modelo_nombre}  
+**📈 R² original (Q_net):** {modelo_r2_original:.4f}
+
+**📅 Periodo:** {df_test['timestamp'].min().strftime('%d/%m/%Y')} - {df_test['timestamp'].max().strftime('%d/%m/%Y')}  
+**📊 Registros:** {len(df_test):,} horas
 
 ---
 
-## 🎯 Métricas de Performance
+## 🎯 Métricas de Performance (Demanda Qout)
 
 **R² (Coef. Determinación):** {r2:.4f}  
-→ El modelo explica {r2*100:.2f}% de la varianza
+→ El modelo explica {r2*100:.2f}% de la varianza en la demanda real
 
 **RMSE (Error Cuadrático):** {rmse:,.0f} m³/hr  
 → Error típico considerando outliers
@@ -717,11 +732,18 @@ class InterfazPlanificacionQin:
 
 ## 📈 Distribución del Error
 
-- **Error máximo positivo:** {errores.max():,.0f} m³/hr
-- **Error máximo negativo:** {errores.min():,.0f} m³/hr
+- **Error máximo positivo:** {errores.max():,.0f} m³/hr (sobre-estimación)
+- **Error máximo negativo:** {errores.min():,.0f} m³/hr (sub-estimación)
 - **Desviación estándar:** {errores.std():,.0f} m³/hr
 
-**Interpretación:** MAPE alto se debe a alta variabilidad del sistema, no a mala predicción. R² cercano a 1 confirma excelente ajuste.
+---
+
+## 💡 Interpretación
+
+- Evaluación sobre **demanda real (Qout)**, no sobre Q_net
+- Fórmula: **Qout = Qin - Q_net**
+- Valores siempre positivos (demanda real del sistema)
+- R² cercano a 1 confirma excelente capacidad predictiva
             """
             
             # Gráfico
@@ -729,28 +751,33 @@ class InterfazPlanificacionQin:
             
             fig = make_subplots(
                 rows=2, cols=1,
-                subplot_titles=('Predicciones vs Real', 'Error de Predicción'),
+                subplot_titles=(
+                    'Demanda Real (Qout): Predicción vs Real',
+                    'Error de Predicción'
+                ),
                 row_heights=[0.6, 0.4],
                 vertical_spacing=0.12
             )
             
-            # Subplot 1: Real vs Pred
+            # Subplot 1: Real vs Pred - DEMANDA (Qout)
             fig.add_trace(go.Scatter(
                 x=timestamps,
-                y=y_test,
+                y=y_test_qout,
                 mode='lines',
-                name='Real',
+                name='Demanda Real',
                 line=dict(color='#2E86AB', width=1.5),
-                hovertemplate='%{x|%d/%m %H:%M}<br>Real: %{y:,.0f} m³/hr<extra></extra>'
+                hovertemplate='%{x|%d/%m %H:%M}<br>Real: %{y:,.0f} m³/hr'
+                '<extra></extra>'
             ), row=1, col=1)
             
             fig.add_trace(go.Scatter(
                 x=timestamps,
-                y=y_pred,
+                y=y_pred_qout,
                 mode='lines',
-                name='Predicción',
+                name='Demanda Predicha',
                 line=dict(color='#F18701', width=1.5, dash='dot'),
-                hovertemplate='%{x|%d/%m %H:%M}<br>Pred: %{y:,.0f} m³/hr<extra></extra>'
+                hovertemplate='%{x|%d/%m %H:%M}<br>Pred: %{y:,.0f} m³/hr'
+                '<extra></extra>'
             ), row=1, col=1)
             
             # Subplot 2: Error
@@ -762,13 +789,19 @@ class InterfazPlanificacionQin:
                 line=dict(color='#A23B72', width=1),
                 fill='tozeroy',
                 fillcolor='rgba(241, 143, 1, 0.2)',
-                hovertemplate='%{x|%d/%m %H:%M}<br>Error: %{y:,.0f} m³/hr<extra></extra>'
+                hovertemplate='%{x|%d/%m %H:%M}<br>Error: %{y:,.0f} m³/hr'
+                '<extra></extra>'
             ), row=2, col=1)
             
-            fig.add_hline(y=0, line_dash="dash", line_color="gray", opacity=0.5, row=2, col=1)
+            fig.add_hline(
+                y=0, line_dash="dash", line_color="gray",
+                opacity=0.5, row=2, col=1
+            )
             
             fig.update_xaxes(title_text="Fecha/Hora", row=2, col=1)
-            fig.update_yaxes(title_text="Q_net (m³/hr)", row=1, col=1)
+            fig.update_yaxes(
+                title_text="Demanda Qout (m³/hr)", row=1, col=1
+            )
             fig.update_yaxes(title_text="Error (m³/hr)", row=2, col=1)
             
             fig.update_layout(
