@@ -95,17 +95,40 @@ class InterfazPlanificacionQin:
             return False
     
     def _calcular_qin_base_historico(self):
-        """Calcula Qin baseline por hora y temperatura desde datos históricos"""
-        print("\n📊 Calculando Qin base histórico...")
+        """Calcula perfil de Qin por hora desde datos RAW de producción"""
+        print("\n📊 Calculando perfil de Qin histórico...")
         
-        # Agregar columna de hora
-        self.df_completo['hora'] = self.df_completo['timestamp'].dt.hour
-        
-        # Calcular mediana de Qin por hora
-        self.qin_base_por_hora = self.df_completo.groupby('hora')['sist_Qin_m3h'].median().to_dict()
-        
-        print(f"   ✅ Qin base calculado para 24 horas")
-        print(f"   📈 Rango: {min(self.qin_base_por_hora.values()):,.0f} - {max(self.qin_base_por_hora.values()):,.0f} m³/hr")
+        # Cargar datos RAW de Qin (producción real)
+        qin_path = Path('data/raw/BD_Qin_m3_UTC.csv')
+        if qin_path.exists():
+            df_qin = pd.read_csv(qin_path)
+            df_qin['timestamp'] = pd.to_datetime(df_qin['timestamp'])
+            df_qin['hora'] = df_qin['timestamp'].dt.hour
+            
+            # Calcular estadísticas por hora
+            qin_stats = df_qin.groupby('hora')['Qin'].agg(['median', 'mean', 'std', 'min', 'max'])
+            
+            # Guardar como diccionario de diccionarios
+            self.qin_perfil_hora = qin_stats.to_dict('index')
+            
+            # Para compatibilidad, también guardar solo mediana
+            self.qin_base_por_hora = qin_stats['median'].to_dict()
+            
+            print(f"   ✅ Perfil de Qin calculado para 24 horas")
+            print(f"   📈 Rango mediana: {qin_stats['median'].min():,.0f} - {qin_stats['median'].max():,.0f} m³/hr")
+            print(f"   📊 Promedio global: {df_qin['Qin'].mean():,.0f} m³/hr")
+        else:
+            print("   ⚠️ BD_Qin_m3_UTC.csv no encontrado, usando dataset procesado")
+            # Fallback al dataset procesado
+            self.df_completo['hora'] = self.df_completo['timestamp'].dt.hour
+            self.qin_base_por_hora = self.df_completo.groupby('hora')['sist_Qin_m3h'].median().to_dict()
+            # Crear perfil simple
+            self.qin_perfil_hora = {
+                h: {'median': v, 'mean': v, 'std': 0, 'min': v, 'max': v} 
+                for h, v in self.qin_base_por_hora.items()
+            }
+            print(f"   ✅ Qin base calculado para 24 horas (fallback)")
+            print(f"   📈 Rango: {min(self.qin_base_por_hora.values()):,.0f} - {max(self.qin_base_por_hora.values()):,.0f} m³/hr")
     
     def _calcular_limites_operativos(self):
         """Calcula límites operativos desde datos reales"""
@@ -266,64 +289,80 @@ class InterfazPlanificacionQin:
     
     def calcular_demanda_predicha(self, q_net_predicho, hora, temperatura):
         """
-        Calcula demanda predicha con AJUSTE MANUAL por temperatura
+        Calcula demanda real (Qout) usando balance hídrico
         
-        Lógica:
-        - Q_net = Qin - Qout - ΔVol (balance del sistema)
-        - Q_net negativo = El sistema pierde agua = HAY DEMANDA
-        - Demanda base = -Q_net
-        - Ajuste por temperatura: +2% por cada grado sobre 20°C
+        REALIDAD DEL DATASET:
+        - Q_net (predicho por modelo) = Q_flujo = ΔVol/Δt
+        - Q_net NO incluye Qin (es solo el flujo de cambio de volumen)
         
-        Nota: El ajuste manual compensa que el modelo V3.0 fue entrenado
-        con datos donde temperatura tiene poca señal predictiva.
+        Balance del sistema:
+        - Qin = Qout + Q_flujo + Pérdidas (asumimos pérdidas ≈ 0)
+        - Q_flujo = Q_net (son el mismo valor)
+        
+        Despejando:
+        - Qout = Qin - Q_flujo = Qin - Q_net
+        
+        Esto garantiza que Qout (demanda) > 0 siempre que Qin > 0
         """
         
-        # Calcular demanda base del modelo
-        if q_net_predicho < 0:
-            demanda_base = abs(q_net_predicho)
-            tipo_balance = 'DÉFICIT'
-            descripcion = 'Sistema demanda agua (consumo > disponibilidad)'
-        elif q_net_predicho > 0:
-            demanda_base = 0
-            tipo_balance = 'SUPERÁVIT'
-            descripcion = 'Sistema con excedente (disponibilidad > consumo)'
-        else:
-            demanda_base = 0
+        # Obtener Qin típico para esta hora (mediana histórica)
+        qin_hora = self.qin_perfil_hora[hora]['median']
+        
+        # Q_net predicho ES Q_flujo (cambio de almacenamiento)
+        q_flujo = q_net_predicho
+        
+        # Calcular Qout (demanda real del sistema)
+        # Balance: Qin = Qout + Q_flujo → Qout = Qin - Q_flujo
+        qout = qin_hora - q_flujo
+        demanda_base = max(qout, 0)  # No puede ser negativa
+        
+        # Clasificar estado del sistema según Q_flujo
+        if q_flujo < -500:  # Descargando almacenamiento significativamente
+            tipo_balance = 'DESCARGA'
+            nivel_alerta = '🔴'
+            descripcion = f'Sistema descarga {abs(q_flujo):.0f} m³/hr (Qout > Qin)'
+        elif q_flujo > 500:  # Recargando almacenamiento
+            tipo_balance = 'RECARGA'
+            nivel_alerta = '🟢'
+            descripcion = f'Sistema recarga {q_flujo:.0f} m³/hr (Qin > Qout)'
+        else:  # Equilibrio o cambio pequeño
             tipo_balance = 'EQUILIBRIO'
-            descripcion = 'Sistema en equilibrio'
+            nivel_alerta = '🟡'
+            descripcion = 'Producción ≈ Consumo'
         
         # AJUSTE POR TEMPERATURA (conocimiento del dominio)
         temp_base = 20.0
         delta_temp = temperatura - temp_base
-        factor_ajuste = 1.0 + (delta_temp * 0.02)  # 2% por cada grado
+        factor_ajuste = 1.0 + (delta_temp * 0.02)  # +2% por grado
         
-        # Aplicar ajuste solo si hay demanda
-        demanda_ajustada = demanda_base * factor_ajuste if demanda_base > 0 else 0
+        # Aplicar ajuste a la demanda
+        demanda_ajustada = demanda_base * factor_ajuste
         
-        # Clasificar nivel de demanda
-        if demanda_ajustada == 0:
-            nivel_demanda = 'NINGUNA'
-            nivel_alerta = '🟢'
-        elif demanda_ajustada < 500:
+        # Clasificar nivel de demanda (rangos realistas: 8k-14k m³/hr)
+        if demanda_ajustada < 9000:
             nivel_demanda = 'BAJA'
-            nivel_alerta = '🟡'
-        elif demanda_ajustada < 2000:
+            nivel_alerta_demanda = '�'
+        elif demanda_ajustada < 11000:
             nivel_demanda = 'MEDIA'
-            nivel_alerta = '🟡'
-        elif demanda_ajustada < 4000:
+            nivel_alerta_demanda = '🟡'
+        elif demanda_ajustada < 13000:
             nivel_demanda = 'ALTA'
-            nivel_alerta = '🟠'
+            nivel_alerta_demanda = '🟠'
         else:
             nivel_demanda = 'MUY ALTA'
-            nivel_alerta = '🔴'
+            nivel_alerta_demanda = '🔴'
         
         return {
             'demanda_m3h': demanda_ajustada,
             'demanda_base': demanda_base,
+            'qin_hora': qin_hora,
+            'qout_estimado': qout,
+            'q_flujo': q_flujo,
             'q_net_predicho': q_net_predicho,
             'tipo_balance': tipo_balance,
             'nivel_demanda': nivel_demanda,
             'nivel_alerta': nivel_alerta,
+            'nivel_alerta_demanda': nivel_alerta_demanda,
             'descripcion': descripcion,
             'temperatura': temperatura,
             'factor_ajuste': factor_ajuste,
@@ -366,8 +405,9 @@ class InterfazPlanificacionQin:
             hora_max = resultados_24h[np.argmax([r['demanda_m3h'] for r in resultados_24h])]['hora']
             
             # Contar horas por nivel
-            horas_deficit = sum(1 for r in resultados_24h if r['tipo_balance'] == 'DÉFICIT')
-            horas_superavit = sum(1 for r in resultados_24h if r['tipo_balance'] == 'SUPERÁVIT')
+            horas_descarga = sum(1 for r in resultados_24h if r['tipo_balance'] == 'DESCARGA')
+            horas_recarga = sum(1 for r in resultados_24h if r['tipo_balance'] == 'RECARGA')
+            horas_equilibrio = sum(1 for r in resultados_24h if r['tipo_balance'] == 'EQUILIBRIO')
             horas_alta = sum(1 for r in resultados_24h if r['nivel_demanda'] in ['ALTA', 'MUY ALTA'])
             
             # Contexto de temperatura
@@ -380,7 +420,7 @@ class InterfazPlanificacionQin:
             
             # Generar reporte
             reporte = f"""
-### 📋 Predicción de Demanda 24 Horas - {fecha_str}
+### 📋 Predicción de Demanda Real (Qout) - 24 Horas - {fecha_str}
 
 **🌡️ Temperatura:** {temperatura:.1f}°C constante  
 {ctx_temp}
@@ -397,16 +437,18 @@ class InterfazPlanificacionQin:
 
 ## ⚖️ Balance del Sistema
 
-**Horas con déficit:** {horas_deficit} horas (sistema necesita agua)  
-**Horas con superávit:** {horas_superavit} horas (sistema tiene excedente)  
-**Horas demanda alta/muy alta:** {horas_alta} horas  
+**🔴 Horas DESCARGA:** {horas_descarga} horas (Qout > Qin → usa almacenamiento)  
+**🟢 Horas RECARGA:** {horas_recarga} horas (Qin > Qout → acumula almacenamiento)  
+**🟡 Horas EQUILIBRIO:** {horas_equilibrio} horas (Qin ≈ Qout)  
+**⚠️ Horas demanda alta/muy alta:** {horas_alta} horas  
 
 ---
 
 💡 **Interpretación:**
-- **Demanda** = Agua que el sistema necesita (cuando Q_net < 0)
-- Los operadores deben ajustar la producción para cubrir esta demanda
-- Mayor temperatura → Mayor consumo → Mayor demanda predicha
+- **Demanda (Qout)** = Consumo real del sistema calculado como: Qin - Q_flujo
+- La demanda NUNCA es cero (siempre hay consumo)
+- Mayor temperatura → Mayor consumo → Mayor demanda predicha (+2%/°C)
+- Balance: Qin = Qout + Q_flujo
             """
             
             # Generar gráfico de líneas
@@ -454,22 +496,23 @@ class InterfazPlanificacionQin:
             hovertemplate='%{x}<br>Demanda: %{y:,.0f} m³/hr<extra></extra>'
         ))
         
-        # Líneas de referencia para niveles
-        fig.add_hline(y=500, line_dash="dot", line_color="green", opacity=0.3, 
+        # Líneas de referencia para niveles (rangos realistas 8k-14k)
+        fig.add_hline(y=9000, line_dash="dot", line_color="green", opacity=0.3,
                      annotation_text="Demanda Baja", annotation_position="right")
-        fig.add_hline(y=2000, line_dash="dot", line_color="orange", opacity=0.3,
+        fig.add_hline(y=11000, line_dash="dot", line_color="orange", opacity=0.3,
                      annotation_text="Demanda Media", annotation_position="right")
-        fig.add_hline(y=4000, line_dash="dot", line_color="red", opacity=0.3,
+        fig.add_hline(y=13000, line_dash="dot", line_color="red", opacity=0.3,
                      annotation_text="Demanda Alta", annotation_position="right")
         
         fig.update_layout(
-            title=f"Predicción de Demanda 24 Horas - {fecha_str} ({temperatura:.1f}°C)",
+            title=f"Predicción de Demanda Real (Qout) 24h - {fecha_str} ({temperatura:.1f}°C)",
             xaxis_title="Hora del Día",
             yaxis_title="Demanda (m³/hr)",
             height=500,
             hovermode='x unified',
             legend=dict(x=0, y=1, orientation='h'),
-            plot_bgcolor='rgba(250,250,250,0.95)'
+            plot_bgcolor='rgba(250,250,250,0.95)',
+            yaxis=dict(range=[7000, 15000])  # Rango realista
         )
         
         return fig
@@ -520,7 +563,8 @@ class InterfazPlanificacionQin:
                 demanda_prom = demanda_total / 24
                 demanda_max = max([r['demanda_m3h'] for r in resultados_dia])
                 
-                horas_deficit = sum(1 for r in resultados_dia if r['tipo_balance'] == 'DÉFICIT')
+                horas_descarga = sum(1 for r in resultados_dia if r['tipo_balance'] == 'DESCARGA')
+                horas_recarga = sum(1 for r in resultados_dia if r['tipo_balance'] == 'RECARGA')
                 
                 fecha_dia = fecha_inicio + timedelta(days=dia)
                 temp_dia = temperaturas_dias[dia]
@@ -530,7 +574,7 @@ class InterfazPlanificacionQin:
 - Demanda total: {demanda_total:,.0f} m³
 - Demanda promedio: {demanda_prom:,.0f} m³/hr
 - Pico demanda: {demanda_max:,.0f} m³/hr
-- Horas con déficit: {horas_deficit}/24
+- Horas descarga: {horas_descarga}/24 | Horas recarga: {horas_recarga}/24
                 """)
             
             # Calcular totales
