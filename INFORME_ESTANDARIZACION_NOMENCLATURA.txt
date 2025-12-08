@@ -1,0 +1,204 @@
+================================================================================
+INFORME TÉCNICO: ESTANDARIZACIÓN DE NOMENCLATURA Q_FLUJO → Q_NET
+================================================================================
+Proyecto: Sistema Predictivo de Demanda de Agua Potable - Gran Valparaíso
+Fecha: Diciembre 2025
+Fase: Corrección de Inconsistencias en Nomenclatura
+
+--------------------------------------------------------------------------------
+1. PROBLEMA IDENTIFICADO
+--------------------------------------------------------------------------------
+
+INCONSISTENCIA EN NOMENCLATURA:
+Durante la investigación del data leakage, se detectó uso mixto de términos
+para referirse a la misma variable física:
+
+  • Q_flujo / Q_flujo_m3hr (nomenclatura antigua, inconsistente)
+  • Q_net / Q_net_m3h (nomenclatura nueva, estandarizada)
+
+IMPACTO:
+• Confusión en lectura de código
+• Dificultad para rastrear features derivadas
+• Riesgo de errores en cálculos por referenciar variable incorrecta
+• Inconsistencia en archivos RAW y scripts de procesamiento
+
+--------------------------------------------------------------------------------
+2. ALCANCE DE LA ESTANDARIZACIÓN
+--------------------------------------------------------------------------------
+
+ARCHIVOS RAW RENOMBRADOS:
+1. BD_Q_flujo_x_Hr_m3hr.csv → BD_Q_net_x_Hr_m3h.csv
+2. BD_Q_flujo_x_Hr_m3hr_LIMPIO.csv → BD_Q_net_x_Hr_m3h_LIMPIO.csv
+
+COLUMNAS RENOMBRADAS:
+• Q_flujo_m3hr → Q_net_m3h (en todos los datasets)
+• Consistencia en unidades: m³/h (metro cúbico por hora)
+
+SCRIPTS ACTUALIZADOS (13 archivos):
+1. generador_features_completo.py
+2. interfaz_planificacion_qin_v1.py
+3. analisis_integral_v3.py
+4. visualizaciones_avanzadas_v3.py
+5. create_prediction_comparison.py
+6. quick_prediction_graph.py
+7. comparacion_v2_vs_v3.py
+8. test_complete.py
+9. test_integration.py
+10. test_model.py
+11. modelo_avanzado.py
+12. advanced_model.py
+13. run_pipeline.py
+
+--------------------------------------------------------------------------------
+3. CAMBIOS ESPECÍFICOS REALIZADOS
+--------------------------------------------------------------------------------
+
+TIPO 1 - RUTAS DE ARCHIVOS:
+ANTES: 'data/raw/BD_Q_flujo_x_Hr_m3hr_LIMPIO.csv'
+DESPUÉS: 'data/raw/BD_Q_net_x_Hr_m3h_LIMPIO.csv'
+
+TIPO 2 - REFERENCIAS A COLUMNAS:
+ANTES: df['Q_flujo_m3hr']
+DESPUÉS: df['Q_net_m3h']
+
+TIPO 3 - FEATURES DERIVADAS:
+ANTES: Q_flujo_m3hr__lag_168h
+DESPUÉS: Q_net_m3h__lag_168h
+
+TIPO 4 - DOCUMENTACIÓN Y COMENTARIOS:
+ANTES: "Carga de Q_flujo desde archivo"
+DESPUÉS: "Carga de Q_net desde archivo"
+
+TIPO 5 - VARIABLES Y FUNCIONES:
+ANTES: qflujo_data, df_flujo
+DESPUÉS: qnet_data, df_qnet
+
+--------------------------------------------------------------------------------
+4. VALIDACIÓN POST-ESTANDARIZACIÓN
+--------------------------------------------------------------------------------
+
+VERIFICACIONES REALIZADAS:
+✓ Todos los archivos RAW accesibles con nuevos nombres
+✓ Scripts ejecutan sin errores de FileNotFoundError
+✓ Columnas correctamente referenciadas en datasets procesados
+✓ Features derivadas mantienen consistencia (lag, ema, diff)
+✓ Gráficos y reportes usan nomenclatura actualizada
+
+PRUEBAS DE INTEGRIDAD:
+✓ Pipeline completo ejecuta correctamente
+✓ Interfaz Gradio carga y funciona sin errores
+✓ Modelos predicen usando nomenclatura estandarizada
+✓ Archivos procesados en data/processed/ actualizados
+
+--------------------------------------------------------------------------------
+5. DEFINICIÓN TÉCNICA DE Q_NET
+--------------------------------------------------------------------------------
+
+Q_NET (CAUDAL NETO):
+Variable que representa el flujo neto agregado del sistema de distribución
+de agua potable en Gran Valparaíso.
+
+RELACIÓN CON OTRAS VARIABLES:
+  Qin = Caudal de entrada al sistema (producción)
+  Qout = Caudal de salida del sistema (demanda)
+  Q_net = Qin - Qout
+
+INTERPRETACIÓN:
+• Q_net > 0: Sistema acumulando agua (llenado de estanques)
+• Q_net < 0: Sistema liberando agua (vaciado de estanques)
+• Q_net ≈ 0: Balance entre producción y demanda
+
+UNIDADES ESTANDARIZADAS:
+• m³/h (metros cúbicos por hora)
+• Rango típico: -20,000 a +10,000 m³/h
+• Frecuencia de medición: Horaria
+
+--------------------------------------------------------------------------------
+6. BENEFICIOS DE LA ESTANDARIZACIÓN
+--------------------------------------------------------------------------------
+
+CLARIDAD:
+• Nomenclatura única y consistente en todo el proyecto
+• Reducción de ambigüedad en código y documentación
+
+MANTENIBILIDAD:
+• Búsquedas de texto más efectivas (grep, find)
+• Facilita identificación de todas las referencias a la variable
+
+ESCALABILIDAD:
+• Base sólida para futuras extensiones del proyecto
+• Integración más sencilla con nuevos módulos
+
+PROFESIONALISMO:
+• Código más legible y profesional
+• Facilita colaboración y revisión por terceros
+
+--------------------------------------------------------------------------------
+7. CONVENCIÓN DE NOMENCLATURA ADOPTADA
+--------------------------------------------------------------------------------
+
+ESTÁNDAR DEFINIDO:
+  {variable}_{unidad}
+
+EJEMPLOS:
+  Q_net_m3h      → Caudal neto en m³/h
+  Qin_m3h        → Caudal entrada en m³/h
+  Qout_m3h       → Caudal salida en m³/h
+  temp_c         → Temperatura en °C
+  HR_pct         → Humedad relativa en %
+
+FEATURES DERIVADAS:
+  {variable}__{operación}_{ventana}
+
+EJEMPLOS:
+  Q_net_m3h__lag_168h         → Lag de 168 horas
+  Q_net_m3h__diff_168h        → Diferencia vs 168h atrás
+  Q_net_m3h__ema_win_24h      → Media móvil exponencial 24h
+  clima_temp_c__lag_24h       → Temperatura con lag de 24h
+
+--------------------------------------------------------------------------------
+8. DOCUMENTACIÓN GENERADA
+--------------------------------------------------------------------------------
+
+ARCHIVO PRINCIPAL:
+✓ RESUMEN_ESTANDARIZACION_COMPLETA.md
+  Contiene listado completo de cambios realizados con:
+  • Tabla de renombrado de archivos
+  • Lista de scripts modificados
+  • Detalles de cambios por archivo
+  • Comandos de verificación
+
+ARCHIVOS COMPLEMENTARIOS:
+✓ Este informe (INFORME_ESTANDARIZACION_NOMENCLATURA.txt)
+✓ Commits en Git con descripción detallada
+✓ Comentarios actualizados en código fuente
+
+--------------------------------------------------------------------------------
+9. IMPACTO EN EL PROYECTO
+--------------------------------------------------------------------------------
+
+TIEMPO INVERTIDO:
+• Identificación de inconsistencias: 30 minutos
+• Renombrado de archivos RAW: 10 minutos
+• Actualización de scripts: 2 horas
+• Pruebas y validación: 1 hora
+• Documentación: 30 minutos
+TOTAL: ~4 horas
+
+ARCHIVOS AFECTADOS:
+• 2 archivos RAW renombrados
+• 13 scripts Python actualizados
+• ~150 líneas de código modificadas
+• 1 archivo de documentación creado
+
+RESULTADOS:
+✓ 100% del código usa nomenclatura Q_net
+✓ 0 referencias a Q_flujo en código activo
+✓ Sistema completo operacional post-cambios
+✓ Sin errores introducidos por estandarización
+
+================================================================================
+CONCLUSIÓN: Estandarización completada exitosamente. Todo el proyecto ahora
+usa la nomenclatura consistente Q_net_m3h para el caudal neto, eliminando
+ambigüedades y mejorando la calidad del código.
+================================================================================

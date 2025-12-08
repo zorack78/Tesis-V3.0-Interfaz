@@ -1,0 +1,180 @@
+{
+  "fecha_analisis": "2025-12-08T08:46:39.695407",
+  "modelos_disponibles": {
+    "LightGBM": {
+      "existe": true,
+      "path": "models/forecasting/modelo_forecasting_lgbm.pkl",
+      "size_mb": 0.3033561706542969,
+      "fecha_modificacion": "2025-12-08T06:10:44.072479",
+      "edad_horas": 2.5955967566666667,
+      "tipo": "LGBMRegressor",
+      "num_features": 164,
+      "features": [
+        "clima_temp_c",
+        "clima_HR_pct",
+        "clima_lluvia_mmhr",
+        "clima_temp_c__lag_1h",
+        "clima_temp_c__lag_2h",
+        "clima_temp_c__lag_3h",
+        "clima_temp_c__lag_6h",
+        "clima_temp_c__lag_12h",
+        "clima_temp_c__lag_24h",
+        "clima_temp_c__lag_48h"
+      ],
+      "hiperparametros_clave": {
+        "colsample_bytree": 0.8,
+        "learning_rate": 0.05,
+        "max_depth": 12,
+        "min_child_samples": 20,
+        "n_estimators": 300,
+        "num_leaves": 50,
+        "subsample": 0.8
+      },
+      "lgbm_params": {
+        "num_iterations": 300,
+        "num_leaves": 50,
+        "learning_rate": 0.05
+      },
+      "carga_exitosa": true
+    },
+    "XGBoost": {
+      "existe": true,
+      "path": "models/forecasting/modelo_forecasting_xgboost.pkl",
+      "size_mb": 1.5567874908447266,
+      "fecha_modificacion": "2025-12-06T15:06:28.231839",
+      "edad_horas": 41.669606995555554,
+      "tipo": "XGBRegressor",
+      "num_features": 164,
+      "hiperparametros_clave": {
+        "colsample_bytree": 0.8,
+        "learning_rate": 0.05,
+        "max_depth": 7,
+        "n_estimators": 300,
+        "subsample": 0.8
+      },
+      "xgb_params": {
+        "n_estimators": 300,
+        "max_depth": 7,
+        "learning_rate": 0.05
+      },
+      "carga_exitosa": true
+    },
+    "RandomForest": {
+      "existe": false,
+      "path": "models/forecasting/modelo_forecasting_randomforest.pkl"
+    }
+  },
+  "uso_por_archivo": {
+    "graficos_comparativa_test.py": {
+      "archivo": "graficos_comparativa_test.py",
+      "modelos_cargados": [
+        {
+          "tipo": "Cargado desde pickle",
+          "nombre": "modelo_forecasting_lgbm",
+          "path": "models/forecasting/modelo_forecasting_lgbm.pkl"
+        },
+        {
+          "tipo": "Cargado desde pickle",
+          "nombre": "modelo_forecasting_xgboost",
+          "path": "models/forecasting/modelo_forecasting_xgboost.pkl"
+        }
+      ],
+      "modelos_entrenados": [
+        "RandomForest",
+        "LightGBM",
+        "XGBoost"
+      ],
+      "paths_modelos": [
+        "models/forecasting/modelo_forecasting_lgbm.pkl",
+        "models/forecasting/modelo_forecasting_xgboost.pkl"
+      ]
+    },
+    "scatter_plots_test.py": {
+      "archivo": "scatter_plots_test.py",
+      "modelos_cargados": [
+        {
+          "tipo": "Cargado desde pickle",
+          "nombre": "modelo_forecasting_lgbm",
+          "path": "models/forecasting/modelo_forecasting_lgbm.pkl"
+        },
+        {
+          "tipo": "Cargado desde pickle",
+          "nombre": "modelo_forecasting_xgboost",
+          "path": "models/forecasting/modelo_forecasting_xgboost.pkl"
+        },
+        {
+          "tipo": "Cargado desde pickle",
+          "nombre": "modelo_forecasting_xgboost",
+          "path": "models/modelo_forecasting_xgboost.pkl"
+        }
+      ],
+      "modelos_entrenados": [
+        "RandomForest"
+      ],
+      "paths_modelos": [
+        "models/forecasting/modelo_forecasting_lgbm.pkl",
+        "models/forecasting/modelo_forecasting_xgboost.pkl",
+        "models/modelo_forecasting_xgboost.pkl"
+      ]
+    },
+    "check_r2.py": {
+      "archivo": "check_r2.py",
+      "modelos_cargados": [
+        {
+          "tipo": "Cargado desde pickle",
+          "nombre": "modelo_forecasting_xgboost",
+          "path": "models/forecasting/modelo_forecasting_xgboost.pkl"
+        }
+      ],
+      "modelos_entrenados": [],
+      "paths_modelos": [
+        "models/forecasting/modelo_forecasting_xgboost.pkl"
+      ]
+    },
+    "interfaz_planificacion_qin_v1.py": {
+      "archivo": "interfaz_planificacion_qin_v1.py",
+      "modelos_cargados": [
+        {
+          "tipo": "Cargado desde pickle",
+          "nombre": "umbrales",
+          "path": "models/forecasting/umbrales.pkl"
+        }
+      ],
+      "modelos_entrenados": [
+        "RandomForest",
+        "LightGBM"
+      ],
+      "paths_modelos": [
+        "models/forecasting/umbrales.pkl"
+      ],
+      "menciones": [
+        "XGBoost"
+      ]
+    }
+  },
+  "paths_unicos": [
+    "models/forecasting/modelo_forecasting_xgboost.pkl",
+    "models/modelo_forecasting_xgboost.pkl",
+    "models/forecasting/modelo_forecasting_lgbm.pkl",
+    "models/forecasting/umbrales.pkl"
+  ],
+  "archivos_con_entrenamiento": {
+    "graficos_comparativa_test.py": [
+      "RandomForest",
+      "LightGBM",
+      "XGBoost"
+    ],
+    "scatter_plots_test.py": [
+      "RandomForest"
+    ],
+    "interfaz_planificacion_qin_v1.py": [
+      "RandomForest",
+      "LightGBM"
+    ]
+  },
+  "conclusiones": {
+    "todos_usan_mismos_pickles": false,
+    "hay_entrenamiento_en_memoria": true,
+    "modelos_pickles_actualizados_recientemente": true
+  }
+}

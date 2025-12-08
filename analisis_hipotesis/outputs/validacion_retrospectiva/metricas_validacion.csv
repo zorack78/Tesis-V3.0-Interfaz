@@ -1,0 +1,7 @@
+Metrica,Valor,Unidad
+RMSE,483.53,m3/hr
+MAE,335.94,m3/hr
+MAPE,42.17,%
+R2,0.9874,
+Registros,"2,256",
+Periodo,2025-06-26 22:00:00+00:00 - 2025-09-30 23:00:00+00:00,

@@ -1,0 +1,117 @@
+{
+  "metadata": {
+    "fecha_calculo": "2025-12-08T08:57:59.308569",
+    "script": "calcular_metricas_oficiales.py",
+    "version": "2.0",
+    "descripcion": "Métricas oficiales de todos los modelos",
+    "modelos_evaluados": [
+      "LightGBM",
+      "XGBoost"
+    ]
+  },
+  "modelos": {
+    "LightGBM": {
+      "path": "models/forecasting/modelo_forecasting_lgbm.pkl",
+      "tipo": "LGBMRegressor",
+      "fecha_modificacion": "2025-12-08T06:10:44.072479",
+      "size_mb": 0.3033561706542969,
+      "existe": true,
+      "num_features": 164,
+      "hiperparametros": {
+        "learning_rate": 0.05,
+        "max_depth": 12,
+        "n_estimators": 300,
+        "num_leaves": 50
+      }
+    },
+    "XGBoost": {
+      "path": "models/forecasting/modelo_forecasting_xgboost.pkl",
+      "tipo": "XGBRegressor",
+      "fecha_modificacion": "2025-12-06T15:06:28.231839",
+      "size_mb": 1.5567874908447266,
+      "existe": true,
+      "num_features": 164,
+      "hiperparametros": {
+        "learning_rate": 0.05,
+        "max_depth": 7,
+        "n_estimators": 300
+      }
+    }
+  },
+  "dataset": {
+    "path": "data/processed/dataset_features_completo.csv",
+    "total_registros": 15031,
+    "split": {
+      "train": {
+        "registros": 10521,
+        "porcentaje": 0.7
+      },
+      "validation": {
+        "registros": 2255,
+        "porcentaje": 0.15
+      },
+      "test": {
+        "registros": 2255,
+        "porcentaje": 0.15
+      }
+    },
+    "periodo_test": {
+      "inicio": "2025-06-26T20:00:00+00:00",
+      "fin": "2025-09-30T20:00:00+00:00",
+      "dias": 96
+    }
+  },
+  "features": {
+    "num_features": 164,
+    "sin_data_leakage": true,
+    "Qin_perfil_desde": "train_only"
+  },
+  "metricas": {
+    "LightGBM": {
+      "Q_net": {
+        "r2": 0.6521275327724374,
+        "mae": 1599.4845392607697,
+        "rmse": 2546.0545275231507,
+        "mape": 136.21551033434406
+      },
+      "Qout": {
+        "r2": 0.6532629394571361,
+        "mae": 1599.4845392607697,
+        "rmse": 2546.0545275231507,
+        "mape": 23.970820168047833
+      }
+    },
+    "XGBoost": {
+      "Q_net": {
+        "r2": 0.5708249001187955,
+        "mae": 1776.4294320079734,
+        "rmse": 2827.9708609768904,
+        "mape": 181.14274151033123
+      },
+      "Qout": {
+        "r2": 0.5722256671331984,
+        "mae": 1776.4294320079734,
+        "rmse": 2827.9708609768904,
+        "mape": 25.006558721654976
+      }
+    }
+  },
+  "ranking": {
+    "mejor_por_r2": {
+      "modelo": "LightGBM",
+      "r2": 0.6532629394571361
+    },
+    "mejor_por_mae": {
+      "modelo": "LightGBM",
+      "mae": 1599.4845392607697
+    }
+  },
+  "estadisticas": {
+    "Qout_real": {
+      "min": -213.8889527941701,
+      "max": 31114.27520819709,
+      "mean": 11943.093719122719,
+      "std": 4323.819630271289
+    }
+  }
+}

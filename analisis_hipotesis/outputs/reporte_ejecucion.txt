@@ -1,0 +1,92 @@
+================================================================================
+REPORTE DE ANALISIS DE HIPOTESIS
+================================================================================
+Fecha/Hora: 2025-12-04 20:29:53
+================================================================================
+
+Scripts ejecutados: 13
+Exitosos: 6
+Fallidos: 7
+
+DETALLE DE EJECUCION:
+--------------------------------------------------------------------------------
+
+Analisis de Correlaciones
+  Script: 01_analisis_correlaciones.py
+  Estado: EXITO
+  Mensaje: Completado exitosamente
+
+Metricas del Modelo
+  Script: 02_metricas_modelo.py
+  Estado: EXITO
+  Mensaje: Completado exitosamente
+
+Importancia de Variables
+  Script: 03_importancia_variables.py
+  Estado: EXITO
+  Mensaje: Completado exitosamente
+
+Validacion Retrospectiva (Test Set)
+  Script: 04_validacion_retrospectiva.py
+  Estado: ERROR
+  Mensaje: Error: Command '['C:\\Python312\\python.exe', '04_validacion_retrospectiva.py']' returned non-zero exit status 1.
+
+Estadisticas Descriptivas
+  Script: 05_estadisticas_descriptivas.py
+  Estado: ERROR
+  Mensaje: Error: Command '['C:\\Python312\\python.exe', '05_estadisticas_descriptivas.py']' returned non-zero exit status 1.
+
+Patrones Temporales de Demanda
+  Script: 06_patrones_temporales.py
+  Estado: EXITO
+  Mensaje: Completado exitosamente
+
+Temperatura vs Demanda
+  Script: 07_temperatura_demanda.py
+  Estado: EXITO
+  Mensaje: Completado exitosamente
+
+Analisis de Volumen en Estanques
+  Script: 08_volumen_estanques.py
+  Estado: ERROR
+  Mensaje: Error: Command '['C:\\Python312\\python.exe', '08_volumen_estanques.py']' returned non-zero exit status 1.
+
+Residuos del Modelo (Diagnostico)
+  Script: 09_residuos_modelo.py
+  Estado: ERROR
+  Mensaje: Error: Command '['C:\\Python312\\python.exe', '09_residuos_modelo.py']' returned non-zero exit status 1.
+
+Error por Condiciones Operativas
+  Script: 10_error_condiciones.py
+  Estado: ERROR
+  Mensaje: Error: Command '['C:\\Python312\\python.exe', '10_error_condiciones.py']' returned non-zero exit status 1.
+
+Comparacion Train/Val/Test
+  Script: 11_comparacion_datasets.py
+  Estado: ERROR
+  Mensaje: Error: Command '['C:\\Python312\\python.exe', '11_comparacion_datasets.py']' returned non-zero exit status 1.
+
+Intervalos de Confianza
+  Script: 12_intervalos_confianza.py
+  Estado: ERROR
+  Mensaje: Error: Command '['C:\\Python312\\python.exe', '12_intervalos_confianza.py']' returned non-zero exit status 1.
+
+Features por Tipo (Interpretabilidad)
+  Script: 13_features_por_tipo.py
+  Estado: EXITO
+  Mensaje: Completado exitosamente
+
+================================================================================
+ARCHIVOS GENERADOS
+================================================================================
+
+- 01_correlaciones_completas.csv (0.7 KB)
+- 01_mapa_calor_correlaciones.png (175.8 KB)
+- 02_metricas_modelo.csv (0.3 KB)
+- 02_metricas_visualizacion.png (278.4 KB)
+- 03_importancia_completa.csv (1.6 KB)
+- 03_top20_variables.png (267.9 KB)
+- descriptivo (4.0 KB)
+- inferencial (0.0 KB)
+- interpretabilidad (4.0 KB)
+- validacion_retrospectiva (4.0 KB)

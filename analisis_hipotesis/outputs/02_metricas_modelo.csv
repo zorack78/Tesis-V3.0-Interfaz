@@ -1,0 +1,6 @@
+Metrica,Valor,Unidad,Interpretacion
+RMSE,426.54993273494574,m3/hr,Error cuadratico medio
+MAE,269.60994277576566,m3/hr,Error absoluto medio
+MAPE,30.226122063496764,%,Error porcentual absoluto medio
+R2,0.9902712943328035,adimensional,Coeficiente de determinacion
+N_test,2240.0,registros,Tamano del conjunto de prueba

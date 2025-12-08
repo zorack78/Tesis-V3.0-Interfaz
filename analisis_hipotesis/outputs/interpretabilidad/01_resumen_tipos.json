@@ -1,0 +1,26 @@
+{
+  "total_features": 47,
+  "tipos_identificados": 4,
+  "distribucion_por_tipo": {
+    "Temporal": {
+      "importancia_pct": 57.298343658447266,
+      "num_features": 16,
+      "importancia_promedio": 0.03581146150827408
+    },
+    "Autoregresivo": {
+      "importancia_pct": 41.71810531616211,
+      "num_features": 26,
+      "importancia_promedio": 0.016045422508166388
+    },
+    "Clim\u00e1tico": {
+      "importancia_pct": 0.889544665813446,
+      "num_features": 4,
+      "importancia_promedio": 0.0022238614037632942
+    },
+    "Otro": {
+      "importancia_pct": 0.09400191158056259,
+      "num_features": 1,
+      "importancia_promedio": 0.0009400189737789333
+    }
+  }
+}

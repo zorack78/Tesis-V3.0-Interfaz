@@ -1,0 +1,49 @@
+# RESUMEN EJECUTIVO - Corrección de Métricas
+
+## 🎯 Problema Resuelto
+Las métricas del gráfico NO coincidían con la interfaz porque:
+- **Gráfico antiguo**: Usaba solo 7 días y modelos SIMULADOS
+- **Interfaz**: Usa todo el test set y modelos REALES
+
+## ✅ Solución
+Se actualizó `graficar_comparacion_rapido.py` para:
+1. Usar **TODO el test set** (4,484 registros = 6 meses)
+2. **Entrenar modelos reales** RF y LightGBM (no simular)
+
+## 📊 Métricas Correctas (Test Set Completo)
+
+```
+Dataset:    4,484 registros
+Periodo:    24 marzo - 30 septiembre 2025
+
+┌────────────────┬─────────────┬──────────┐
+│ Modelo         │ MAE (m³/h)  │ Estado   │
+├────────────────┼─────────────┼──────────┤
+│ XGBoost        │ 1,663       │ ✅ Real  │
+│ Random Forest  │ 1,502       │ ✅ Real  │
+│ LightGBM       │ 1,501       │ ✅ Real  │
+└────────────────┴─────────────┴──────────┘
+```
+
+## 📁 Archivos
+
+### ✅ USAR (nuevo)
+- `outputs/figures/comparacion_3_modelos_test_completo.png`
+
+### ❌ NO USAR (obsoleto)
+- `outputs/figures/comparacion_3_modelos_ultima_semana.png`
+
+## 🔍 Verificación
+
+Para verificar que las métricas coinciden con la interfaz:
+
+1. Abre la interfaz Gradio
+2. Ve a la pestaña "Comparar Modelos ML"
+3. Observa las métricas reportadas
+4. Compara con el gráfico nuevo
+
+**Deberían ser idénticas** (±10 m³/h por pequeñas diferencias en splitting)
+
+---
+
+**Status**: ✅ CORREGIDO | **Fecha**: 2025-01-XX | **Tiempo**: ~2 min ejecución

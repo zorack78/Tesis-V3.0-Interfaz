@@ -2,7 +2,7 @@
 Generador de Features Completo para Prediccion de Demanda
 Basado en especificacion del usuario - Listado_de_features_para_sondeo_de_correlaciones.csv
 
-Target: Q_flujo_m3hr (demanda/recuperacion)
+Target: Q_net_m3h (flujo neto del sistema = ΔVol/Δt)
 """
 
 import pandas as pd
@@ -16,23 +16,23 @@ def cargar_datos_raw():
     """Carga todos los datasets raw necesarios"""
     print("Cargando datasets raw...")
     
-    # Cargar Q_flujo limpio (target)
-    qflujo = pd.read_csv('data/raw/BD_Q_flujo_x_Hr_m3hr_LIMPIO.csv')
-    qflujo.columns = qflujo.columns.str.strip()
-    qflujo['timestamp'] = pd.to_datetime(qflujo['timestamp'])
+    # Cargar Q_net (target - flujo neto del sistema)
+    qnet = pd.read_csv('data/raw/BD_Q_net_x_Hr_m3h_LIMPIO.csv')
+    qnet.columns = qnet.columns.str.strip()
+    qnet['timestamp'] = pd.to_datetime(qnet['timestamp'])
     
     # Cargar clima
-    clima = pd.read_csv('data/raw/BD_Clima2024a202509_UTC.csv')
+    clima = pd.read_csv('data/raw/BD_Clima2024a202509_Local.csv')
     clima.columns = clima.columns.str.strip()
     clima['timestamp'] = pd.to_datetime(clima['timestamp'])
     
     # Cargar Qin
-    qin = pd.read_csv('data/raw/BD_Qin_m3_UTC.csv')
+    qin = pd.read_csv('data/raw/BD_Qin_m3_Local.csv')
     qin.columns = qin.columns.str.strip()
     qin['timestamp'] = pd.to_datetime(qin['timestamp'])
     
     # Cargar volumen total
-    voltotal = pd.read_csv('data/raw/BD_VolTotal_X_Hr_m3_UTC.csv')
+    voltotal = pd.read_csv('data/raw/BD_VolTotal_X_Hr_m3_Local.csv')
     voltotal.columns = voltotal.columns.str.strip()
     voltotal['timestamp'] = pd.to_datetime(voltotal['timestamp'])
     
@@ -41,13 +41,13 @@ def cargar_datos_raw():
     calendar.columns = calendar.columns.str.strip()
     calendar['timestamp'] = pd.to_datetime(calendar['timestamp'])
     
-    print(f"  Q_flujo: {qflujo.shape}")
+    print(f"  Q_net:   {qnet.shape}")
     print(f"  Clima:   {clima.shape}")
     print(f"  Qin:     {qin.shape}")
     print(f"  Vol:     {voltotal.shape}")
     print(f"  Cal:     {calendar.shape}")
     
-    return qflujo, clima, qin, voltotal, calendar
+    return qnet, clima, qin, voltotal, calendar
 
 
 def generar_features_clima_base(clima_df):
@@ -84,21 +84,27 @@ def generar_rolling_stats(df, var, windows):
 def generar_pendientes_lineales(df, var, windows):
     """Genera pendientes lineales para ventanas"""
     def compute_slope(series):
-        if len(series) < 2 or series.isna().all():
-            return np.nan
-        x = np.arange(len(series))
-        y = series.values
-        mask = ~np.isnan(y)
-        if mask.sum() < 2:
-            return np.nan
         try:
+            if len(series) < 2:
+                return np.nan
+            # Convertir a numpy array si es pandas Series
+            if hasattr(series, 'values'):
+                y = series.values
+            else:
+                y = np.array(series)
+            
+            mask = ~np.isnan(y)
+            if mask.sum() < 2:
+                return np.nan
+            
+            x = np.arange(len(y))
             slope, _ = np.polyfit(x[mask], y[mask], 1)
             return slope
         except:
             return np.nan
     
     for w in windows:
-        df[f'{var}__slope_lin_win_{w}h'] = df[var].rolling(window=w, min_periods=2).apply(compute_slope, raw=False)
+        df[f'{var}__slope_lin_win_{w}h'] = df[var].rolling(window=w, min_periods=2).apply(compute_slope, raw=True)
     
     return df
 
@@ -320,20 +326,84 @@ def generar_features_hidraulicas(df, qin_df, voltotal_df):
 
 
 def generar_features_target_derivadas(df):
-    """Genera features derivadas del target (Q_flujo) con LAGs apropiados"""
-    # Renombrar target
-    df = df.rename(columns={'Q_flujo_m3hr': 'Q_net_m3h'})
+    """
+    Genera features derivadas del target (Q_net)
     
-    # LAG semanal (persistencia)
-    df['Q_net_m3h__lag_168h'] = df['Q_net_m3h'].shift(168)
+    ⚠️ TODAS LAS FEATURES DE Q_NET DESHABILITADAS POR DATA LEAKAGE
     
-    # Diferencia vs semana pasada
-    df['Q_net_m3h__diff_168h'] = df['Q_net_m3h'] - df['Q_net_m3h'].shift(168)
+    Cualquier feature calculada desde Q_net (lags, diffs, EMAs, rolling)
+    introduce data leakage porque usa valores del test set para predecir
+    otros valores del test set.
     
-    # EMA (Exponential Moving Average)
-    df['Q_net_m3h__ema_win_6h'] = df['Q_net_m3h'].ewm(span=6, adjust=False).mean()
-    df['Q_net_m3h__ema_win_12h'] = df['Q_net_m3h'].ewm(span=12, adjust=False).mean()
-    df['Q_net_m3h__ema_win_24h'] = df['Q_net_m3h'].ewm(span=24, adjust=False).mean()
+    Ejemplo: Q_net__lag_168h para predecir Sep 25 usa Sep 18,
+    pero Sep 18 está en el test set (después de marzo 23).
+    """
+    # DESHABILITADO - LAG semanal causa data leakage
+    # df['Q_net_m3h__lag_168h'] = df['Q_net_m3h'].shift(168)
+    
+    # DESHABILITADO - Diferencia vs semana pasada causa data leakage
+    # df['Q_net_m3h__diff_168h'] = df['Q_net_m3h'] - df['Q_net_m3h'].shift(168)
+    
+    # DESHABILITADO - EMAs causan data leakage
+    # df['Q_net_m3h__ema_win_6h'] = df['Q_net_m3h'].ewm(span=6, adjust=False).mean()
+    # df['Q_net_m3h__ema_win_12h'] = df['Q_net_m3h'].ewm(span=12, adjust=False).mean()
+    # df['Q_net_m3h__ema_win_24h'] = df['Q_net_m3h'].ewm(span=24, adjust=False).mean()
+    
+    return df
+
+
+def generar_features_ema_externas(df):
+    """
+    Genera EMAs de variables EXTERNAS (sin data leakage)
+    
+    ✅ SEGURO: Estas variables son inputs conocidos en tiempo real,
+    no dependen del target (Q_net), por lo tanto NO causan leakage.
+    
+    En producción, estas variables están disponibles antes de predecir.
+    """
+    print("\n📊 Generando EMAs de variables externas (sin leakage)...")
+    
+    # EMAs de Temperatura (disponible en tiempo real)
+    if 'clima_temp_c' in df.columns:
+        df['clima_temp_ema_24h'] = df['clima_temp_c'].ewm(span=24, adjust=False).mean()
+        df['clima_temp_ema_168h'] = df['clima_temp_c'].ewm(span=168, adjust=False).mean()
+        print("   ✅ Temperatura EMA (24h, 168h)")
+    
+    # EMAs de Humedad Relativa
+    if 'clima_HR_pct' in df.columns:
+        df['clima_HR_ema_24h'] = df['clima_HR_pct'].ewm(span=24, adjust=False).mean()
+        df['clima_HR_ema_168h'] = df['clima_HR_pct'].ewm(span=168, adjust=False).mean()
+        print("   ✅ Humedad Relativa EMA (24h, 168h)")
+    
+    # EMAs de Qin (input del sistema conocido)
+    if 'sist_Qin_m3h' in df.columns:
+        df['sist_Qin_ema_24h'] = df['sist_Qin_m3h'].ewm(span=24, adjust=False).mean()
+        df['sist_Qin_ema_168h'] = df['sist_Qin_m3h'].ewm(span=168, adjust=False).mean()
+        print("   ✅ Qin EMA (24h, 168h)")
+    
+    # EMAs de Volumen Total (estado del sistema conocido)
+    if 'sist_Vtotal_m3' in df.columns:
+        df['sist_Vtotal_ema_24h'] = df['sist_Vtotal_m3'].ewm(span=24, adjust=False).mean()
+        df['sist_Vtotal_ema_168h'] = df['sist_Vtotal_m3'].ewm(span=168, adjust=False).mean()
+        print("   ✅ Volumen Total EMA (24h, 168h)")
+    
+    # EMAs de variables climáticas derivadas (si existen)
+    if 'clima_VPD_kpa' in df.columns:
+        df['clima_VPD_ema_24h'] = df['clima_VPD_kpa'].ewm(span=24, adjust=False).mean()
+        print("   ✅ VPD EMA (24h)")
+    
+    if 'clima_CDH_acum' in df.columns:
+        df['clima_CDH_ema_24h'] = df['clima_CDH_acum'].ewm(span=24, adjust=False).mean()
+        print("   ✅ CDH EMA (24h)")
+    
+    # EMAs cortas adicionales (útiles para captar cambios rápidos)
+    if 'clima_temp_c' in df.columns:
+        df['clima_temp_ema_6h'] = df['clima_temp_c'].ewm(span=6, adjust=False).mean()
+        print("   ✅ Temperatura EMA corta (6h)")
+    
+    if 'sist_Qin_m3h' in df.columns:
+        df['sist_Qin_ema_6h'] = df['sist_Qin_m3h'].ewm(span=6, adjust=False).mean()
+        print("   ✅ Qin EMA corta (6h)")
     
     return df
 
@@ -367,14 +437,14 @@ def main():
     print("=" * 100)
     
     # 1. Cargar datos
-    qflujo, clima, qin, voltotal, calendar = cargar_datos_raw()
+    qnet, clima, qin, voltotal, calendar = cargar_datos_raw()
     
-    # 2. Merge inicial (Q_flujo + clima)
+    # 2. Merge inicial (Q_net + clima)
     print("\nGenerando features climaticas...")
     clima = generar_features_clima_base(clima)
     
-    df = pd.merge(qflujo, clima, on='timestamp', how='inner')
-    print(f"  Merge Q_flujo + clima: {df.shape}")
+    df = pd.merge(qnet, clima, on='timestamp', how='inner')
+    print(f"  Merge Q_net + clima: {df.shape}")
     
     # 3. LAGs climáticos
     print("\nGenerando LAGs climaticos...")
@@ -411,11 +481,14 @@ def main():
     print("\nGenerando features hidraulicas...")
     df = generar_features_hidraulicas(df, qin, voltotal)
     
-    # 9. Features derivadas del target
+    # 9. EMAs de variables externas - DESHABILITADO (probado, no mejora performance)
+    # df = generar_features_ema_externas(df)
+    
+    # 10. Features derivadas del target
     print("\nGenerando features derivadas del target...")
     df = generar_features_target_derivadas(df)
     
-    # 10. Features de interacción
+    # 11. Features de interacción
     print("\nGenerando features de interaccion...")
     df = generar_features_interaccion(df)
     

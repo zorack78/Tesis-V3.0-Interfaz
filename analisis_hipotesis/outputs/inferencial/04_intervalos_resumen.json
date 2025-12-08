@@ -1,0 +1,11 @@
+{
+  "confianza": 0.95,
+  "z_score": 1.96,
+  "sigma_residuos": 477.22331786860303,
+  "margen_error_m3": 935.3577030224619,
+  "cobertura_total_pct": 94.63652482269504,
+  "cobertura_periodo_pct": 93.86503067484662,
+  "ancho_promedio_pct": -86.52708013178089,
+  "registros_evaluados": 2256,
+  "registros_periodo": 163
+}

@@ -1,0 +1,11 @@
+{
+  "r2": 0.9914281880670458,
+  "mae": 247.71827853231352,
+  "rmse": 399.5724235204519,
+  "n_features": 44,
+  "features_eliminadas": [
+    "Q_net_m3h__ema_win_6h",
+    "Q_net_m3h__ema_win_12h",
+    "Q_net_m3h__ema_win_24h"
+  ]
+}

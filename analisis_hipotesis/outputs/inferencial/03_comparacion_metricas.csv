@@ -1,0 +1,4 @@
+Dataset,RMSE,MAE,MAPE,R2,Registros,Diff_vs_Train_%,Evaluacion
+Train,1428.2977,373.0903,70.7618,0.9005,10523,0.0000,Baseline
+Validation,461.7048,328.7789,61.9425,0.9875,2255,-67.6745,Validación
+Test,483.5294,335.9410,42.1672,0.9874,2256,-66.1465,Sobreajuste significativo

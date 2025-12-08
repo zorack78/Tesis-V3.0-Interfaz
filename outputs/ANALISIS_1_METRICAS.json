@@ -1,0 +1,144 @@
+{
+  "fecha_analisis": "2025-12-08T08:36:29.664167",
+  "archivos_analizados": 5,
+  "archivos_encontrados": 5,
+  "archivos_no_encontrados": 0,
+  "resultados": {
+    "Interfaz Gradio": {
+      "archivo": "interfaz_planificacion_qin_v1.py",
+      "target": [
+        "Q_net_m3h",
+        "Qout (calculado)"
+      ],
+      "split_method": "70/15/15",
+      "periodo_test": null,
+      "calculo_qout": "Sí (4 patrones encontrados)",
+      "modelo_usado": [
+        "LightGBM",
+        "XGBoost",
+        "RandomForest"
+      ],
+      "metricas_calculadas": [
+        "MAE",
+        "RMSE",
+        "R2",
+        "MAPE"
+      ],
+      "data_leakage_check": "Sí (usa solo train para perfil)"
+    },
+    "Modelo Gradio": {
+      "archivo": "modelo_gradio.py",
+      "target": [
+        "Volumen_Total_m3"
+      ],
+      "split_method": null,
+      "periodo_test": null,
+      "calculo_qout": null,
+      "modelo_usado": [
+        "XGBoost"
+      ],
+      "metricas_calculadas": [
+        "MAE",
+        "RMSE",
+        "R2",
+        "MAPE"
+      ],
+      "data_leakage_check": null
+    },
+    "Gráficos Comparativa": {
+      "archivo": "graficos_comparativa_test.py",
+      "target": [
+        "Q_net_m3h",
+        "Qout (calculado)"
+      ],
+      "split_method": "70/15/15",
+      "periodo_test": null,
+      "calculo_qout": "Sí (5 patrones encontrados)",
+      "modelo_usado": [
+        "LightGBM",
+        "XGBoost",
+        "RandomForest"
+      ],
+      "metricas_calculadas": [
+        "MAE",
+        "RMSE",
+        "R2"
+      ],
+      "data_leakage_check": "Sí (usa solo train para perfil)"
+    },
+    "Scatter Plots": {
+      "archivo": "scatter_plots_test.py",
+      "target": [
+        "Q_net_m3h",
+        "Qout (calculado)"
+      ],
+      "split_method": "70/15/15",
+      "periodo_test": null,
+      "calculo_qout": "Sí (5 patrones encontrados)",
+      "modelo_usado": [
+        "LightGBM",
+        "XGBoost",
+        "RandomForest"
+      ],
+      "metricas_calculadas": [
+        "MAE",
+        "RMSE",
+        "R2"
+      ],
+      "data_leakage_check": "Sí (usa solo train para perfil)"
+    },
+    "Check R2": {
+      "archivo": "check_r2.py",
+      "target": [
+        "Q_net_m3h",
+        "Qout (calculado)"
+      ],
+      "split_method": "70/15/15",
+      "periodo_test": null,
+      "calculo_qout": "Sí (5 patrones encontrados)",
+      "modelo_usado": [
+        "XGBoost"
+      ],
+      "metricas_calculadas": [
+        "MAE",
+        "RMSE",
+        "R2"
+      ],
+      "data_leakage_check": "Sí (usa solo train para perfil)"
+    }
+  },
+  "inconsistencias": {
+    "targets_diferentes": 3,
+    "targets_lista": [
+      "Q_net_m3h",
+      "Qout (calculado)",
+      "Volumen_Total_m3"
+    ],
+    "splits_diferentes": 1,
+    "splits_lista": [
+      "70/15/15"
+    ],
+    "modelos_diferentes": 3,
+    "modelos_lista": [
+      "LightGBM",
+      "RandomForest",
+      "XGBoost"
+    ],
+    "periodos_diferentes": 0,
+    "periodos_lista": []
+  },
+  "recomendaciones": [
+    {
+      "severidad": "ALTA",
+      "problema": "Targets diferentes",
+      "descripcion": "Los archivos usan diferentes targets (Q_net vs Qout vs Volumen_Total)",
+      "solucion": "Decidir UN target oficial para la tesis y actualizar todos los scripts"
+    },
+    {
+      "severidad": "CRÍTICA",
+      "problema": "Target inexistente",
+      "descripcion": "modelo_gradio.py busca \"Volumen_Total_m3\" que NO existe en data_test.csv",
+      "solucion": "Corregir a \"sist_Vtotal_m3\" o cambiar a \"Q_net_m3h\""
+    }
+  ]
+}

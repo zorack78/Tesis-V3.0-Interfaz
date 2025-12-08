@@ -1,7 +1,9 @@
 {
-  "rmse": 426.54993273494574,
-  "mae": 269.60994277576566,
-  "r2": 0.9902712943328035,
-  "mape": 30.226122063496764,
-  "n_test": 2240
+  "mae_train": 879.1224177551036,
+  "mae_test": 1662.6571116273878,
+  "rmse_test": 2557.5853755385965,
+  "r2": 0.6332175339921302,
+  "n_features": 164,
+  "modelo": "XGBoost sin EMAs",
+  "nota": "Reentrenado sin features EMA para eliminar data leakage"
 }

@@ -1,0 +1,56 @@
+{
+  "fecha_auditoria": "2025-12-07T23:15:42.097161",
+  "dataset": {
+    "total_registros": 15031,
+    "train_registros": 10521,
+    "val_registros": 2255,
+    "test_registros": 2255,
+    "periodo_test": "2025-06-26 20:00:00+00:00 → 2025-09-30 20:00:00+00:00"
+  },
+  "demanda_real": {
+    "media": -57.96830892316185,
+    "mediana": -363.1039970195852,
+    "std": 4316.757694453275,
+    "min": -19241.47520819709,
+    "max": 12007.48895279417
+  },
+  "modelos": {
+    "LightGBM": {
+      "mae": 1599.4845392607697,
+      "rmse": 2546.0545275231507,
+      "r2": 0.6521275327724374,
+      "mape": 136.21551033434406,
+      "n_features": 164,
+      "residuos": {
+        "media": 39.4238520484994,
+        "std": 2545.749284004769,
+        "min": -16237.937150762007,
+        "max": 14761.440002697535,
+        "p5": -3455.0054775812723,
+        "p95": 3893.7426612183613
+      }
+    }
+  },
+  "ranking": {
+    "por_mae": [
+      {
+        "modelo": "LightGBM",
+        "mae": 1599.4845392607697
+      }
+    ],
+    "por_r2": [
+      {
+        "modelo": "LightGBM",
+        "r2": 0.6521275327724374
+      }
+    ]
+  },
+  "alertas": [
+    "LightGBM: MAPE muy alto (136.22%)"
+  ],
+  "verificacion": {
+    "sin_alertas": false,
+    "n_modelos_evaluados": 1,
+    "metricas_consistentes": false
+  }
+}

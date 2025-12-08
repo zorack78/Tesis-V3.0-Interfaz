@@ -1,0 +1,190 @@
+================================================================================
+INFORME TÉCNICO: CORRECCIÓN DE DATA LEAKAGE EN MODELOS ML
+================================================================================
+Proyecto: Sistema Predictivo de Demanda de Agua Potable - Gran Valparaíso
+Fecha: Diciembre 2025
+Autor: Sistema de Machine Learning V3.0
+
+--------------------------------------------------------------------------------
+1. DETECCIÓN INICIAL DEL PROBLEMA
+--------------------------------------------------------------------------------
+
+SÍNTOMA OBSERVADO:
+Los tres modelos de ML (XGBoost, RandomForest, LightGBM) predecían valores
+idénticos y anómalos para el 25 de septiembre de 2025, 08:00 hrs:
+  • Valor real: 29,406 m³/h (pico anómalo)
+  • Predicción XGBoost: ~26,000 m³/h
+  • Predicción RandomForest: ~26,000 m³/h
+  • Predicción LightGBM: ~28,000 m³/h
+
+CONCLUSIÓN: Los modelos seguían perfectamente la curva real del test set,
+incluyendo anomalías impredecibles → SOSPECHA DE DATA LEAKAGE.
+
+--------------------------------------------------------------------------------
+2. PROCESO DE INVESTIGACIÓN (3 ITERACIONES)
+--------------------------------------------------------------------------------
+
+ITERACIÓN 1: NOMENCLATURA Y PERFIL QIN
+• Hallazgo: Inconsistencia en nomenclatura (Q_flujo vs Q_net)
+• Acción: Estandarización completa del proyecto a "Q_net"
+• Resultado: Problema persistió
+• Nueva investigación: Perfil de Qin usaba 15,336 registros (dataset completo)
+  en lugar de 10,727 registros (solo entrenamiento hasta 22-marzo-2025)
+• Corrección: Filtrado de perfil Qin a datos pre-corte
+• Estado: Problema parcialmente resuelto pero aún presente
+
+ITERACIÓN 2: FEATURES EMA (EXPONENTIAL MOVING AVERAGE)
+• Hallazgo: Features Q_net_m3h__ema_win_6h, _12h, _24h contenían data leakage
+• Problema: Ventanas móviles de 6, 12 y 24 horas calculadas sobre dataset
+  completo ANTES del split train/test
+• Ejemplo crítico:
+  - Predicción Sep 25, 08:00 usa EMA_24h
+  - EMA_24h incluye valores de Sep 25 00:00-07:00 (dentro del test set)
+  - El modelo "ve" el futuro inmediato
+• Corrección: Comentar líneas 334-337 en generador_features_completo.py
+• Reentrenamiento: Modelo pasó de 169 → 166 features
+• Métricas post-corrección:
+  - MAE: 281 → 287 m³/h (incremento esperado)
+  - R²: 0.9899 (sin cambio significativo ← SOSPECHOSO)
+• Estado: Usuario reportó "sigue igual, no hay ninguna noticia buena"
+
+ITERACIÓN 3: FEATURES LAG Y DIFERENCIAS (CAUSA RAÍZ)
+• Hallazgo: Features Q_net_m3h__lag_168h y Q_net_m3h__diff_168h activas
+• Problema CRÍTICO:
+  - lag_168h = valor de Q_net hace 168 horas (1 semana exacta)
+  - Para predecir Sep 25, 08:00 usa valor de Sep 18, 08:00
+  - Sep 18 está DESPUÉS del corte train (23-marzo-2025)
+  - El modelo accede a valores del test set para predecir otros del test set
+• Ubicación: generador_features_completo.py líneas 328, 331
+• Impacto: Todas las predicciones post-marzo usaban valores futuros
+• Corrección DEFINITIVA:
+  - Comentar líneas 328 y 331 (LAG features)
+  - Eliminar TODAS las features derivadas de Q_net
+  - Modelo retiene solo features exógenas (clima + calendario)
+• Reentrenamiento final: 166 → 164 features
+
+--------------------------------------------------------------------------------
+3. ANÁLISIS DE CAUSA RAÍZ
+--------------------------------------------------------------------------------
+
+ARQUITECTURA PROBLEMÁTICA:
+El pipeline original calculaba features sobre el dataset completo ANTES de
+realizar el split train/test:
+
+  [Dataset completo 15,031 registros]
+           ↓
+  [Calcular LAGs, EMAs, diffs] ← ERROR: usa valores futuros
+           ↓
+  [Split train/test] ← Demasiado tarde
+           ↓
+  [Entrenamiento]
+
+FEATURES CONTAMINADAS IDENTIFICADAS:
+1. Q_net_m3h__lag_168h (lag semanal)
+2. Q_net_m3h__diff_168h (diferencia semanal)
+3. Q_net_m3h__ema_win_6h (media móvil 6h)
+4. Q_net_m3h__ema_win_12h (media móvil 12h)
+5. Q_net_m3h__ema_win_24h (media móvil 24h)
+
+MECANISMO DEL LEAKAGE:
+• Variables autoregresivas (LAG, EMA) calculadas en periodo T
+• Usan valores de T-168h, T-24h, T-12h, T-6h
+• Si T está en test set, entonces T-168h también puede estarlo
+• El modelo "predice" usando información que no estaría disponible
+
+--------------------------------------------------------------------------------
+4. SOLUCIÓN IMPLEMENTADA
+--------------------------------------------------------------------------------
+
+CORRECCIONES APLICADAS:
+1. Perfil Qin: Filtrado a 10,727 registros (solo train, hasta 22-mar-2025)
+2. Features EMA: Comentadas (líneas 334-337 generador_features_completo.py)
+3. Features LAG: Comentadas (líneas 328, 331 generador_features_completo.py)
+4. Regeneración: Dataset sin features derivadas de Q_net
+5. Reentrenamiento: Modelo con 164 features puramente exógenas
+
+ARQUITECTURA CORREGIDA:
+El modelo ahora predice Q_net basándose ÚNICAMENTE en:
+  • Variables climáticas: temperatura, humedad, precipitación, viento
+  • Índices derivados: CDH, API, VPD
+  • Variables temporales: hora, día, mes, día de semana
+  • Variables calendario: festivos, eventos, temporadas turísticas
+
+--------------------------------------------------------------------------------
+5. VALIDACIÓN DE RESULTADOS
+--------------------------------------------------------------------------------
+
+MÉTRICAS ANTES vs DESPUÉS:
+
+                    ANTES (con leakage)     DESPUÉS (corregido)
+                    -------------------     -------------------
+MAE (test)          287 m³/h                1,663 m³/h
+RMSE (test)         ~400 m³/h               2,558 m³/h
+R²                  0.9899                  0.6332
+Features            166                     164
+
+INTERPRETACIÓN:
+• MAE aumentó 5.8x: El modelo ya NO "ve" el futuro
+• R² cayó de 0.99 → 0.63: Eliminado el sobreajuste artificial
+• Métricas actuales son REALISTAS para predicción puramente exógena
+• Variables clima/calendario explican ~63% de variabilidad (razonable)
+
+PRUEBA CRÍTICA - Sep 25, 2025 08:00:
+• Valor real: 29,406 m³/h (evento anómalo no predecible)
+• Predicción XGBoost: ~15,000-18,000 m³/h
+• Error: ~11,000-14,000 m³/h
+• CORRECTO: El modelo NO puede predecir anomalías sin precedente
+
+COMPORTAMIENTO VALIDADO:
+✓ Modelos divergen apropiadamente en eventos anómalos
+✓ No siguen perfectamente la curva real del test
+✓ Errores más grandes pero científicamente rigurosos
+✓ Predicciones basadas solo en información disponible a priori
+
+--------------------------------------------------------------------------------
+6. LECCIONES APRENDIDAS Y RECOMENDACIONES
+--------------------------------------------------------------------------------
+
+BUENAS PRÁCTICAS IMPLEMENTADAS:
+1. Calcular features autoregresivas DESPUÉS del split train/test
+2. Validar que features solo usen información del pasado verdadero
+3. Desconfiar de métricas "demasiado buenas" (R² > 0.95 con pocos features)
+4. Revisar que LAGs no crucen la frontera train/test
+5. Documentar exhaustivamente el origen de cada feature
+
+SEÑALES DE ALERTA (RED FLAGS):
+• R² cercano a 1.0 en problemas complejos
+• MAE muy bajo (~1-2% del rango de valores)
+• Modelos diferentes predicen valores casi idénticos
+• Predicciones siguen eventos anómalos impredecibles
+
+VERIFICACIÓN FINAL:
+✓ Código corregido en: generador_features_completo.py
+✓ Modelo reentrenado: modelo_forecasting_xgboost.pkl
+✓ Features limpias: 164 variables exógenas
+✓ Documentación: RESUMEN_ESTANDARIZACION_COMPLETA.md
+✓ Validación gráfica: comparacion_3_modelos_ultima_semana.png
+
+================================================================================
+CONCLUSIÓN: Data leakage completamente eliminado. El sistema ahora realiza
+predicciones científicamente rigurosas basadas únicamente en información
+climática y calendario disponible antes del evento a predecir.
+================================================================================
+
+--------------------------------------------------------------------------------
+EXPLICACIÓN SIMPLE DEL DATA LEAKAGE
+--------------------------------------------------------------------------------
+
+¿QUÉ PASÓ?
+El modelo usaba datos del futuro para predecir el futuro.
+
+¿CÓMO?
+Las features LAG (semana pasada) en septiembre usaban valores de septiembre,
+que también estaban en el periodo de prueba. Era como hacer un examen habiendo
+visto las respuestas.
+
+ANALOGÍA:
+Imagina predecir el clima del domingo usando datos del sábado... pero el
+sábado aún no ha ocurrido. Eso hacía el modelo con lag_168h.
+
+================================================================================

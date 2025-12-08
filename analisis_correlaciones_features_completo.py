@@ -1,6 +1,6 @@
 """
 Análisis de Correlaciones con Features Completas
-Target: Q_net_m3h (Q_flujo)
+Target: Q_net_m3h (flujo neto del sistema = ΔVol/Δt)
 """
 
 import pandas as pd

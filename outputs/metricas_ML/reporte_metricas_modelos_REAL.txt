@@ -1,0 +1,37 @@
+================================================================================
+REPORTE DE MÉTRICAS - COMPARACIÓN MODELOS ML (DATOS REALES)
+Predicción de Demanda de Agua Potable - Gran Valparaíso
+================================================================================
+
+Fecha: 2025-12-05 19:32:19
+Test Set: Junio - Septiembre 2025 (2,256 registros)
+Fuente: Interfaz Gradio - Comparación Modelos ML
+
+--------------------------------------------------------------------------------
+MODELO                              R²         RMSE          MAE         MAPE
+--------------------------------------------------------------------------------
+XGBoost V3.0                    0.9905          425          269        2.67%
+RandomForest                    0.9842          548          295        3.15%
+LightGBM                        0.9923          382          261        2.59%
+--------------------------------------------------------------------------------
+
+================================================================================
+MEJOR MODELO POR MÉTRICA
+================================================================================
+
+🥇 R² más alto: LightGBM (0.9923)
+🥇 RMSE más bajo: LightGBM (382 m³/hr)
+🥇 MAE más bajo: LightGBM (261 m³/hr)
+🥇 MAPE más bajo: LightGBM (2.59%)
+
+================================================================================
+OBSERVACIONES
+================================================================================
+
+• Estas métricas corresponden a los valores REALES obtenidos
+  de la interfaz Gradio (Tab 'Comparación Modelos ML')
+• Test set: 15% final del dataset (Jun-Sep 2025)
+• Métricas calculadas sobre Demanda Qout (no Q_net directo)
+• LightGBM muestra el mejor desempeño en todas las métricas
+
+================================================================================

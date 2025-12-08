@@ -1,0 +1,326 @@
+{
+  "fecha_analisis": "2025-12-08T08:39:11.227658",
+  "datasets_verificados": {
+    "data_test.csv": {
+      "existe": true,
+      "total_columnas": 174,
+      "columnas_target": [
+        "Q_net_m3h",
+        "sist_Vtotal_m3",
+        "Q_net_m3h__lag_168h",
+        "Q_net_m3h__diff_168h",
+        "Q_net_m3h__ema_win_6h",
+        "Q_net_m3h__ema_win_12h",
+        "Q_net_m3h__ema_win_24h"
+      ]
+    },
+    "data_train.csv": {
+      "existe": true,
+      "total_columnas": 174,
+      "columnas_target": [
+        "Q_net_m3h",
+        "sist_Vtotal_m3",
+        "Q_net_m3h__lag_168h",
+        "Q_net_m3h__diff_168h",
+        "Q_net_m3h__ema_win_6h",
+        "Q_net_m3h__ema_win_12h",
+        "Q_net_m3h__ema_win_24h"
+      ]
+    },
+    "data_validation.csv": {
+      "existe": true,
+      "total_columnas": 174,
+      "columnas_target": [
+        "Q_net_m3h",
+        "sist_Vtotal_m3",
+        "Q_net_m3h__lag_168h",
+        "Q_net_m3h__diff_168h",
+        "Q_net_m3h__ema_win_6h",
+        "Q_net_m3h__ema_win_12h",
+        "Q_net_m3h__ema_win_24h"
+      ]
+    }
+  },
+  "analisis_archivos": {
+    "modelo_gradio.py": {
+      "archivo": "modelo_gradio.py",
+      "lineas_totales": 391,
+      "target_asignaciones": [
+        {
+          "linea": 51,
+          "codigo": "target_col = ' Volumen_Total_m3'"
+        },
+        {
+          "linea": 57,
+          "codigo": "df_features[f'lag_{lag}h'] = df_features[target_col].shift(lag)"
+        },
+        {
+          "linea": 76,
+          "codigo": "df_features['diff_24h'] = df_features[target_col].diff(24)"
+        },
+        {
+          "linea": 252,
+          "codigo": "target_col = ' Volumen_Total_m3'"
+        },
+        {
+          "linea": 258,
+          "codigo": "y_train = train_features[target_col]"
+        },
+        {
+          "linea": 261,
+          "codigo": "y_val = val_features[target_col]"
+        },
+        {
+          "linea": 264,
+          "codigo": "y_test = test_features[target_col]"
+        }
+      ],
+      "target_usado": {
+        "linea": 264,
+        "codigo": "y_test = test_features[target_col]"
+      },
+      "columnas_requeridas": [],
+      "lectura_datos": [
+        {
+          "linea": 236,
+          "codigo": "train_df = pd.read_csv(data_path / \"data_train.csv\")"
+        },
+        {
+          "linea": 237,
+          "codigo": "val_df = pd.read_csv(data_path / \"data_validation.csv\")"
+        },
+        {
+          "linea": 238,
+          "codigo": "test_df = pd.read_csv(data_path / \"data_test.csv\")"
+        }
+      ],
+      "calculo_qout": [],
+      "problemas_potenciales": []
+    },
+    "interfaz_planificacion_qin_v1.py": {
+      "archivo": "interfaz_planificacion_qin_v1.py",
+      "lineas_totales": 2797,
+      "target_asignaciones": [],
+      "target_usado": {
+        "linea": 1668,
+        "codigo": "y_test = df_test['Q_net_m3h']"
+      },
+      "columnas_requeridas": [
+        "sist_Qin_m3h",
+        "Q_net_m3h"
+      ],
+      "lectura_datos": [
+        {
+          "linea": 155,
+          "codigo": "df_clima = pd.read_csv('data/processed/dataset_completo_sincronizado.csv')"
+        },
+        {
+          "linea": 341,
+          "codigo": "self.df_completo = pd.read_csv(df_path)"
+        },
+        {
+          "linea": 375,
+          "codigo": "df_qin = pd.read_csv(qin_path)"
+        },
+        {
+          "linea": 1156,
+          "codigo": "df = pd.read_csv(df_completo_path)"
+        },
+        {
+          "linea": 1570,
+          "codigo": "df = pd.read_csv(df_path)"
+        },
+        {
+          "linea": 1642,
+          "codigo": "df = pd.read_csv(df_path)"
+        },
+        {
+          "linea": 1796,
+          "codigo": "df = pd.read_csv(df_completo_path)"
+        },
+        {
+          "linea": 2053,
+          "codigo": "df = pd.read_csv(df_completo_path)"
+        }
+      ],
+      "calculo_qout": [
+        {
+          "linea": 385,
+          "codigo": "qin_stats = df_qin_train.groupby('hora')['Qin'].agg(['median', 'mean', 'std', 'min', 'max'])",
+          "tipo": "Perfil horario Qin"
+        },
+        {
+          "linea": 401,
+          "codigo": "self.qin_base_por_hora = df_train.groupby('hora')['sist_Qin_m3h'].median().to_dict()",
+          "tipo": "Perfil horario Qin"
+        },
+        {
+          "linea": 1179,
+          "codigo": "y_test_qout = qin_por_hora.values - y_test_qnet"
+        },
+        {
+          "linea": 1180,
+          "codigo": "y_pred_qout = qin_por_hora.values - y_pred_qnet"
+        },
+        {
+          "linea": 1832,
+          "codigo": "y_test_qout = qin_por_hora - y_test_qnet"
+        },
+        {
+          "linea": 1837,
+          "codigo": "y_pred_qout_xgb = qin_por_hora - y_pred_qnet_xgb"
+        },
+        {
+          "linea": 1852,
+          "codigo": "y_pred_qout_rf = qin_por_hora - y_pred_qnet_rf"
+        },
+        {
+          "linea": 1870,
+          "codigo": "y_pred_qout_lgb = qin_por_hora - y_pred_qnet_lgb"
+        },
+        {
+          "linea": 2077,
+          "codigo": "y_test_qout = qin_por_hora - y_test_qnet"
+        },
+        {
+          "linea": 2099,
+          "codigo": "y_pred_qout_xgb = qin_por_hora - y_pred_qnet_xgb"
+        },
+        {
+          "linea": 2118,
+          "codigo": "y_pred_qout_rf = qin_por_hora - y_pred_qnet_rf"
+        },
+        {
+          "linea": 2140,
+          "codigo": "y_pred_qout_lgb = qin_por_hora - y_pred_qnet_lgb"
+        }
+      ],
+      "problemas_potenciales": []
+    },
+    "graficos_comparativa_test.py": {
+      "archivo": "graficos_comparativa_test.py",
+      "lineas_totales": 438,
+      "target_asignaciones": [],
+      "target_usado": {
+        "linea": 105,
+        "codigo": "y_train = df_train['Q_net_m3h'].values"
+      },
+      "columnas_requeridas": [
+        "sist_Qin_m3h",
+        "Q_net_m3h"
+      ],
+      "lectura_datos": [
+        {
+          "linea": 30,
+          "codigo": "df = pd.read_csv('data/processed/dataset_features_completo.csv')"
+        },
+        {
+          "linea": 49,
+          "codigo": "df_qin_raw = pd.read_csv(qin_path)"
+        }
+      ],
+      "calculo_qout": [
+        {
+          "linea": 58,
+          "codigo": "qin_perfil = df_qin_train.groupby('hora')['Qin'].median().to_dict()",
+          "tipo": "Perfil horario Qin"
+        },
+        {
+          "linea": 63,
+          "codigo": "qin_perfil = df_train_for_qin.groupby('hora')['sist_Qin_m3h'].median().to_dict()",
+          "tipo": "Perfil horario Qin"
+        },
+        {
+          "linea": 75,
+          "codigo": "y_test = qin_test - y_test_qnet  # Qout real"
+        },
+        {
+          "linea": 183,
+          "codigo": "y_pred_qout = qin_test - y_pred_qnet"
+        }
+      ],
+      "problemas_potenciales": []
+    },
+    "scatter_plots_test.py": {
+      "archivo": "scatter_plots_test.py",
+      "lineas_totales": 393,
+      "target_asignaciones": [],
+      "target_usado": {
+        "linea": 80,
+        "codigo": "y_test = qin_test - y_test_qnet"
+      },
+      "columnas_requeridas": [
+        "sist_Qin_m3h",
+        "Q_net_m3h"
+      ],
+      "lectura_datos": [
+        {
+          "linea": 24,
+          "codigo": "df = pd.read_csv('data/processed/dataset_features_completo.csv')"
+        },
+        {
+          "linea": 42,
+          "codigo": "df_qin_raw = pd.read_csv(qin_path)"
+        }
+      ],
+      "calculo_qout": [
+        {
+          "linea": 49,
+          "codigo": "qin_perfil = df_qin_train.groupby('hora')['Qin'].median().to_dict()",
+          "tipo": "Perfil horario Qin"
+        },
+        {
+          "linea": 52,
+          "codigo": "qin_perfil = df_train_for_qin.groupby('hora')['sist_Qin_m3h'].median().to_dict()",
+          "tipo": "Perfil horario Qin"
+        },
+        {
+          "linea": 80,
+          "codigo": "y_test = qin_test - y_test_qnet"
+        },
+        {
+          "linea": 146,
+          "codigo": "y_pred_qout = qin_test - y_pred_qnet"
+        }
+      ],
+      "problemas_potenciales": []
+    },
+    "check_r2.py": {
+      "archivo": "check_r2.py",
+      "lineas_totales": 78,
+      "target_asignaciones": [],
+      "target_usado": null,
+      "columnas_requeridas": [
+        "sist_Qin_m3h",
+        "Q_net_m3h"
+      ],
+      "lectura_datos": [
+        {
+          "linea": 7,
+          "codigo": "df = pd.read_csv('data/processed/dataset_features_completo.csv')"
+        }
+      ],
+      "calculo_qout": [
+        {
+          "linea": 18,
+          "codigo": "qin_perfil = df_train.groupby('hora')['sist_Qin_m3h'].median().to_dict()",
+          "tipo": "Perfil horario Qin"
+        },
+        {
+          "linea": 23,
+          "codigo": "y_test_qout = qin_test - y_test_qnet"
+        },
+        {
+          "linea": 34,
+          "codigo": "y_pred_qout = qin_test - y_pred_qnet"
+        }
+      ],
+      "problemas_potenciales": []
+    }
+  },
+  "columnas_requeridas": [
+    "Q_net_m3h",
+    "sist_Qin_m3h"
+  ],
+  "problemas_criticos": []
+}

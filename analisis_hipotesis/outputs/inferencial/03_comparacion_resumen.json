@@ -1,0 +1,31 @@
+{
+  "train": {
+    "Dataset": "Train",
+    "RMSE": 1428.297692375886,
+    "MAE": 373.09028713842207,
+    "MAPE": 70.76180258983648,
+    "R2": 0.9005005797883125,
+    "Registros": 10523
+  },
+  "validation": {
+    "Dataset": "Validation",
+    "RMSE": 461.70479205570115,
+    "MAE": 328.7788796597015,
+    "MAPE": 61.94245993411218,
+    "R2": 0.9875449739384852,
+    "Registros": 2255
+  },
+  "test": {
+    "Dataset": "Test",
+    "RMSE": 483.52943843832554,
+    "MAE": 335.9410267240973,
+    "MAPE": 42.16718836937308,
+    "R2": 0.9874475801010117,
+    "Registros": 2256
+  },
+  "diferencias": {
+    "rmse_val_vs_train_pct": -67.67447048887382,
+    "rmse_test_vs_train_pct": -66.14645245039893
+  },
+  "evaluacion": "Sobreajuste significativo"
+}

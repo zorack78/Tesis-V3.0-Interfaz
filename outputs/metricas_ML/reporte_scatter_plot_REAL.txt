@@ -1,0 +1,62 @@
+======================================================================
+REPORTE ESTADÍSTICO - SCATTER PLOT PREDICCIONES REALES
+======================================================================
+
+Fecha generación: 2025-12-05 19:58:32
+Periodo test: 2025-06-26T22:00:00.000000000 → 2025-09-30T23:00:00.000000000
+N samples: 2256
+
+----------------------------------------------------------------------
+MÉTRICAS DE LOS MODELOS
+----------------------------------------------------------------------
+
+📊 XGBoost V3.0 (Actual):
+   R²:     0.9905
+   RMSE:   425 m³/hr
+   MAE:    269 m³/hr
+   MAPE:   2.67%
+
+📊 RandomForest:
+   R²:     0.9842
+   RMSE:   548 m³/hr
+   MAE:    295 m³/hr
+   MAPE:   3.15%
+
+📊 LightGBM:
+   R²:     0.9923
+   RMSE:   382 m³/hr
+   MAE:    261 m³/hr
+   MAPE:   2.59%
+
+----------------------------------------------------------------------
+ESTADÍSTICAS DESCRIPTIVAS
+----------------------------------------------------------------------
+
+Demanda Real:
+   Media:   11,822 m³/hr
+   Std:     4,358 m³/hr
+   Min:     -786 m³/hr
+   Max:     31,006 m³/hr
+
+XGBoost V3.0:
+   Media pred:     11,816 m³/hr
+   Error medio:    -6 m³/hr
+   Error abs medio:269 m³/hr
+   Std error:      425 m³/hr
+
+RandomForest:
+   Media pred:     11,826 m³/hr
+   Error medio:    5 m³/hr
+   Error abs medio:295 m³/hr
+   Std error:      548 m³/hr
+
+LightGBM:
+   Media pred:     11,829 m³/hr
+   Error medio:    8 m³/hr
+   Error abs medio:261 m³/hr
+   Std error:      382 m³/hr
+
+======================================================================
+RIGOR CIENTÍFICO: Todas las métricas y predicciones
+provienen de datos reales del test set (Jun-Sep 2025).
+======================================================================

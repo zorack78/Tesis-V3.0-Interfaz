@@ -1,0 +1,58 @@
+{
+  "fecha_auditoria": "2025-12-07T23:05:57.903320",
+  "dataset": {
+    "total_registros": 15031,
+    "train": {
+      "registros": 10521,
+      "porcentaje": "70.0%",
+      "periodo": "2024-01-01 01:00:00+00:00 → 2025-03-22 21:00:00+00:00"
+    },
+    "validacion": {
+      "registros": 2255,
+      "porcentaje": "15.0%",
+      "periodo": "2025-03-22 22:00:00+00:00 → 2025-06-26 19:00:00+00:00"
+    },
+    "test": {
+      "registros": 2255,
+      "porcentaje": "15.0%",
+      "periodo": "2025-06-26 20:00:00+00:00 → 2025-09-30 20:00:00+00:00"
+    }
+  },
+  "features": {
+    "total": 164,
+    "climaticas": 61,
+    "temporales": 17,
+    "calendario": 6,
+    "otras": 80,
+    "con_lag": 27,
+    "sospechosas": 0,
+    "lista_sospechosas": []
+  },
+  "perfil_qin": {
+    "registros_usados": 10727,
+    "registros_totales": 15336,
+    "usa_solo_train": true,
+    "registros_excluidos": 4609,
+    "rango_mediana": "11790 - 11927 m³/h"
+  },
+  "metricas_test": {
+    "mae_m3h": 1599.48453926077,
+    "rmse_m3h": 2546.0545275231507,
+    "r2": 0.6534832219233222,
+    "mape_pct": 24.09958312602993
+  },
+  "residuos": {
+    "media": 39.423852048499356,
+    "std": 2545.749284004769,
+    "min": -16237.937150762007,
+    "max": 14761.440002697535
+  },
+  "validacion": {
+    "sin_overlap": true,
+    "sin_features_contaminadas": true,
+    "perfil_qin_limpio": true,
+    "r2_realista": true,
+    "mae_realista": true,
+    "sin_sesgo": true
+  }
+}

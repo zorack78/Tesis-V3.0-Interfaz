@@ -48,7 +48,8 @@ class GradioWaterDemandModel:
             drop=True
         )
         
-        target_col = ' Volumen_Total_m3'
+        # Target corregido: usar Q_net_m3h que existe en los datos
+        target_col = 'Q_net_m3h'
         
         # 1. Features LAG importantes
         print("   📊 Creando features LAG...")
@@ -249,7 +250,8 @@ def main():
     test_features = model.create_enhanced_features(test_df)
     
     # Seleccionar features
-    target_col = ' Volumen_Total_m3'
+    # Target corregido: usar Q_net_m3h que existe en los datos
+    target_col = 'Q_net_m3h'
     feature_columns = model.select_features(train_features)
     model.feature_columns = feature_columns
     

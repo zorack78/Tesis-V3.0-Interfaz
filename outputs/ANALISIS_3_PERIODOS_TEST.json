@@ -1,0 +1,48 @@
+{
+  "fecha_analisis": "2025-12-08T08:41:26.706735",
+  "dataset_completo": {
+    "total_registros": 15034,
+    "fecha_inicio": "2024-01-01 01:00:00+00:00",
+    "fecha_fin": "2025-09-30 23:00:00+00:00"
+  },
+  "test_esperado_70_15_15": {
+    "registros": 2256,
+    "inicio": "2025-06-26 22:00:00+00:00",
+    "fin": "2025-09-30 23:00:00+00:00",
+    "duracion_dias": 96
+  },
+  "resultados_por_archivo": {
+    "graficos_comparativa_test.py": {
+      "split_method": "70/15/15",
+      "test_registros": 2256,
+      "test_inicio": "2025-06-26 22:00:00+00:00",
+      "test_fin": "2025-09-30 23:00:00+00:00",
+      "primera_semana_inicio": "2025-06-26 22:00:00+00:00",
+      "ultima_semana_fin": "2025-09-30 23:00:00+00:00"
+    },
+    "scatter_plots_test.py": {
+      "split_method": "70/15/15",
+      "test_registros": 2256,
+      "test_inicio": "2025-06-26 22:00:00+00:00",
+      "test_fin": "2025-09-30 23:00:00+00:00"
+    },
+    "check_r2.py": {
+      "split_method": "70/15/15",
+      "test_registros": 2256,
+      "test_inicio": "2025-06-26 22:00:00+00:00",
+      "test_fin": "2025-09-30 23:00:00+00:00"
+    },
+    "interfaz_planificacion_qin_v1.py": {
+      "split_method": "Fecha fija (2025-03-22)",
+      "test_registros": 2257,
+      "test_inicio": "2025-06-26 21:00:00+00:00",
+      "test_fin": "2025-09-30 23:00:00+00:00"
+    }
+  },
+  "consistencia": {
+    "tamaños_diferentes": 2,
+    "fechas_inicio_diferentes": 2,
+    "fechas_fin_diferentes": 1,
+    "es_consistente": false
+  }
+}
