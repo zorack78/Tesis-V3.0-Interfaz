@@ -1,0 +1,183 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║            🔒 VERSIÓN 2.0 FINAL - GRABADA EN PIEDRA 🔒                      ║
+║                                                                              ║
+║     Sistema de Planificación de Producción (Qin) - Interfaz Gradio          ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│  📅 INFORMACIÓN DE BLOQUEO                                                   │
+├──────────────────────────────────────────────────────────────────────────────┤
+│  Fecha:          8 de diciembre de 2025                                      │
+│  Versión:        2.0 FINAL                                                   │
+│  Estado:         ✅ PRODUCCIÓN - BLOQUEADA                                   │
+│  Archivo:        interfaz_planificacion_qin_v2.py                            │
+│  Commit:         7e35f7e                                                      │
+│  Tag Git:        v2.0-final                                                  │
+│  Branch:         prediccion-con-temperatura                                  │
+│  Repositorio:    https://github.com/zorack78/Tesis-V3.0-Interfaz            │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│  🎯 CARACTERÍSTICAS PRINCIPALES                                              │
+├──────────────────────────────────────────────────────────────────────────────┤
+│  ✅ 4 Métricas:         R², RMSE, MAE, MAPE (histogramas)                   │
+│  ✅ 3 Scatter Plots:    XGBoost, RandomForest, LightGBM                     │
+│  ✅ Métricas en Plots:  Caja con 4 valores en cada scatter                  │
+│  ✅ Serie Temporal:     Ocupa todo el ancho (4 columnas)                    │
+│  ✅ Leyenda:            Vertical, esquina inferior derecha                  │
+│  ✅ Layout:             3 filas x 4 columnas (optimizado)                   │
+│  ✅ Altura:             1150px                                               │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│  📊 ESTRUCTURA DE VISUALIZACIÓN                                              │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  FILA 1 (22%): MÉTRICAS - TODO EL PERÍODO DE TESTING                        │
+│  ┌──────────┬──────────┬──────────┬──────────┐                             │
+│  │    R²    │   RMSE   │   MAE    │   MAPE   │                             │
+│  │  (Bar)   │  (Bar)   │  (Bar)   │  (Bar)   │                             │
+│  └──────────┴──────────┴──────────┴──────────┘                             │
+│                                                                              │
+│  FILA 2 (38%): SERIE TEMPORAL - ÚLTIMOS 7 DÍAS                              │
+│  ┌──────────────────────────────────────────┐                               │
+│  │   Serie Temporal (4 columnas ancho)      │                               │
+│  │   Real + 3 Predicciones                  │                               │
+│  └──────────────────────────────────────────┘                               │
+│                                                                              │
+│  FILA 3 (40%): SCATTER PLOTS - TODO EL PERÍODO                              │
+│  ┌──────────┬──────────┬──────────┬──────────┐                             │
+│  │ XGBoost  │RandomFor.│ LightGBM │ Leyenda  │                             │
+│  │+Métricas │+Métricas │+Métricas │(Vertical)│                             │
+│  └──────────┴──────────┴──────────┴──────────┘                             │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│  📈 MÉTRICAS DE LOS MODELOS (Testing: 26/06-30/09/2025)                     │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  🥇 LightGBM         R²: 0.6307  |  MAE: 1,650 m³/h  |  MAPE: 17.67%       │
+│  🥈 RandomForest     R²: 0.6173  |  MAE: 1,696 m³/h  |  MAPE: 18.35%       │
+│  🥉 XGBoost V3.0     R²: 0.5637  |  MAE: 1,928 m³/h  |  MAPE: 20.71%       │
+│                                                                              │
+│  Dataset: 15,031 registros | 162 features | Split: 70/15/15                 │
+│  Test: 2,255 horas (96 días)                                                 │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│  📚 DOCUMENTACIÓN COMPLETA                                                   │
+├──────────────────────────────────────────────────────────────────────────────┤
+│  📄 VERSION_V2.0_FINAL.md     Documentación técnica completa                │
+│  ⚠️  NO_MODIFICAR_V2.md        Advertencia de bloqueo                       │
+│  📝 CHANGELOG.md               Historial de versiones                       │
+│  📋 VERSION_FINAL_NO_MODIFICAR.txt  (V1.0 - referencia)                     │
+│  🚫 NO_MODIFICAR_INTERFAZ.md   (V1.0 - referencia)                          │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│  🔐 ARCHIVOS PROTEGIDOS (NO MODIFICAR)                                       │
+├──────────────────────────────────────────────────────────────────────────────┤
+│  ✅ interfaz_planificacion_qin_v1.py (Versión 1.0)                          │
+│  ✅ interfaz_planificacion_qin_v2.py (Versión 2.0 - ACTUAL)                 │
+│  ✅ models/forecasting/modelo_forecasting_lgbm.pkl                          │
+│  ✅ models/forecasting/modelo_forecasting_xgboost.pkl                       │
+│  ✅ models/forecasting/features.txt                                         │
+│  ✅ data/processed/dataset_features_completo.csv                            │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│  🚀 CÓMO EJECUTAR                                                            │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  1. Abrir terminal en el directorio del proyecto                            │
+│  2. Ejecutar:                                                                │
+│                                                                              │
+│     C:\Users\socce\anaconda3\python.exe interfaz_planificacion_qin_v2.py    │
+│                                                                              │
+│  3. Abrir navegador en: http://127.0.0.1:7867                               │
+│  4. Ir a pestaña "Testing"                                                   │
+│  5. Hacer clic en "Evaluar 3 Modelos ML"                                    │
+│  6. Esperar ~30 segundos                                                     │
+│  7. Ver visualizaciones completas                                           │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│  ⚠️  PROTOCOLO PARA FUTURAS MODIFICACIONES                                  │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  Si necesitas hacer cambios:                                                │
+│                                                                              │
+│  ❌ NO MODIFICAR interfaz_planificacion_qin_v2.py                           │
+│                                                                              │
+│  ✅ CREAR NUEVA VERSIÓN:                                                    │
+│     1. copy interfaz_planificacion_qin_v2.py interfaz_planificacion_qin_v3.py│
+│     2. Modificar solo V3.py                                                  │
+│     3. Documentar en VERSION_V3.0_FINAL.md                                  │
+│     4. Mantener V1.0 y V2.0 intactas como respaldo                          │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│  🔄 GIT - RESPALDO EN GITHUB                                                 │
+├──────────────────────────────────────────────────────────────────────────────┤
+│  ✅ Commit realizado:   7e35f7e                                              │
+│  ✅ Tag creado:         v2.0-final                                           │
+│  ✅ Push exitoso:       prediccion-con-temperatura                          │
+│  ✅ CHANGELOG creado:   d742f6a                                              │
+│  ✅ URL:                https://github.com/zorack78/Tesis-V3.0-Interfaz     │
+│                                                                              │
+│  Para recuperar esta versión en el futuro:                                  │
+│  git checkout v2.0-final                                                     │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│  ✨ MEJORAS RESPECTO A V1.0                                                  │
+├──────────────────────────────────────────────────────────────────────────────┤
+│  ➕ MAPE agregado como 4ta métrica                                          │
+│  ➕ 3 scatter plots individuales con todos los datos de testing             │
+│  ➕ Cajas de métricas en cada scatter plot                                  │
+│  ➕ Serie temporal más grande (4 columnas vs 3)                             │
+│  ➕ Leyenda vertical en esquina inferior derecha                            │
+│  ➕ Títulos descriptivos en cada subplot                                    │
+│  ➕ Líneas más gruesas para mejor visibilidad                               │
+│  ➕ Optimización de espacio (layout 3x4)                                    │
+│  ➕ Altura aumentada (1150px vs 900px)                                      │
+│  ➕ Mejor distribución de proporciones (22/38/40)                           │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│  📊 COMPARACIÓN V1.0 vs V2.0                                                 │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  Aspecto              │ V1.0                │ V2.0                           │
+│  ─────────────────────┼─────────────────────┼─────────────────────          │
+│  Métricas             │ 3 (R², RMSE, MAE)   │ 4 (+ MAPE)                    │
+│  Scatter plots        │ ❌ No               │ ✅ Sí (3)                     │
+│  Métricas en scatter  │ N/A                 │ ✅ Sí                         │
+│  Serie temporal       │ 3 columnas          │ 4 columnas                    │
+│  Leyenda              │ Horizontal centro   │ Vertical esquina              │
+│  Layout               │ 2x3                 │ 3x4                           │
+│  Altura               │ 900px               │ 1150px                        │
+│  Líneas serie         │ 1.5-2px             │ 2-2.5px                       │
+│  Optimización espacio │ Básica              │ Avanzada                      │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║                   ✅ VERSIÓN 2.0 GRABADA EN PIEDRA ✅                        ║
+║                                                                              ║
+║              Esta versión ha sido validada, documentada y                    ║
+║           respaldada en GitHub con tag v2.0-final                            ║
+║                                                                              ║
+║                      NO DEBE SER MODIFICADA                                  ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+Fecha de bloqueo: 8 de diciembre de 2025
+Firmado digitalmente con Git: 7e35f7e + v2.0-final
